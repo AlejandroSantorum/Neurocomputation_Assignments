@@ -19,11 +19,11 @@ class Neuron:
         self.connections.append(Connection(neuron, weight))
 
     def Trigger():
-        if type is Types.Direct:
+        if self.type is Types.Direct:
             self.f_x = self.value
-        else if type is Types.Bias:
+        else if self.type is Types.Bias:
             self.f_x = 1.0
-        else if type is Types.McCulloch:
+        else if self.type is Types.McCulloch:
             self.f_x = self.active_output if self.value >= self.threshold else self.inactive_output
         # else
         for conection in self.connections:
