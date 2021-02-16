@@ -11,18 +11,37 @@ def build_nn_ex1():
     hidden_layer = Layer()
     output_layer = Layer()
 
-    input_layer.add(Neuron(0.5, Neuron.Type.Direct))
-    input_layer.add(Neuron(0.5, Neuron.Type.Direct))
-    input_layer.add(Neuron(0.5, Neuron.Type.Direct))
+    x1 = Neuron(0.5, Neuron.Type.Direct)
+    x2 = Neuron(0.5, Neuron.Type.Direct)
+    x3 = Neuron(0.5, Neuron.Type.Direct)
+    input_layer.add(x1)
+    input_layer.add(x2)
+    input_layer.add(x3)
+    h1 = Neuron(2, Neuron.Type.McCulloch, 1, 0)
+    h2 = Neuron(2, Neuron.Type.McCulloch, 1, 0)
+    h3 = Neuron(2, Neuron.Type.McCulloch, 1, 0)
+    hidden_layer.add(h1)
+    hidden_layer.add(h2)
+    hidden_layer.add(h3)
+    o1 = Neuron(1, Neuron.Type.McCulloch, 1, 0)
+    output_layer.add(o1)
 
-    hidden_layer.add(Neuron(2, Neuron.Type.McCulloch, 1, 0))
-    hidden_layer.add(Neuron(2, Neuron.Type.McCulloch, 1, 0))
-    hidden_layer.add(Neuron(2, Neuron.Type.McCulloch, 1, 0))
+    # a12
+    x1.connect(h1, 1)
+    x2.connect(h1, 1)
+    x3.connect(h1, 0)
+    # a13
+    x1.connect(h2, 1)
+    x2.connect(h2, 0)
+    x3.connect(h2, 1)
+    # a23
+    x1.connect(h3, 0)
+    x2.connect(h3, 1)
+    x3.connect(h3, 1)
 
-    output_layer.add(Neuron(1, Neuron.Type.McCulloch, active_output=1, inactive_output=0))
-
-    input_layer.connectLayer(hidden_layer, Layer.WeightMode.OneWeight)
-    hidden_layer.connectLayer(output_layer, Layer.WeightMode.OneWeight)
+    h1.connect(o1, 1)
+    h2.connect(o1, 1)
+    h3.connect(o1, 1)
 
     nn.add(input_layer)
     nn.add(hidden_layer)
@@ -59,5 +78,16 @@ if __name__ == "__main__":
 
         for layer in nn.layers:
             for neuron in layer.neurons:
-                print(neuron.value, " ", end='')
+                print(neuron.f_x, "  ", end='')
         print("")
+
+## TODO:
+#   1) Pretty printer
+#   2) Hacer las preguntas
+#   3) Cabeceras de ficheros, funciones y un par de comentarios (pydoc)
+
+## Preguntas:
+#   1) ¿Hay que mostrar el estado de la capa oculta/salida despues de que se acaben los ejemplos?
+#   2) ¿Podríamos simplificar la red neuronal para que se obtiviese la salida correcta en t+1?
+#   3) ¿Es una OR de tres entradas o el circuito de la figura 2?
+#   4) ¿Es necesario utilizar gitlab o podemos usar github?

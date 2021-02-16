@@ -4,8 +4,7 @@ class Layer:
 
     class WeightMode(Enum):
         ZeroWeight = 0
-        OneWeight = 1
-        PerceptronWeight = 2
+        PerceptronWeight = 1
 
     def __init__(self):
         self.neurons = []
@@ -28,10 +27,6 @@ class Layer:
             for orig_neuron in self.neurons:
                 orig_neuron.connect(neuron, 0)
 
-        elif weight_mode is Layer.WeightMode.OneWeight:
-            for orig_neuron in self.neurons:
-                orig_neuron.connect(neuron, 1)
-
         elif weight_mode is Layer.WeightMode.PerceptronWeight:
             pass
 
@@ -40,5 +35,7 @@ class Layer:
             neuron.trigger()
 
     def propagate(self):
+        for neuron in self.neurons:
+            neuron.value = 0
         for neuron in self.neurons:
             neuron.propagate()
