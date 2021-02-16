@@ -1,5 +1,5 @@
 class Connection:
-    def __init__(weight, neuron):
+    def __init__(self, weight, neuron):
         self.former_weight = None
         self.weight = weight
         self.neuron = neuron
@@ -8,5 +8,5 @@ class Connection:
     def free():
         pass
 
-    def propagate():
+    def propagate(self):
         self.neuron.value += self.weight * self.received_value

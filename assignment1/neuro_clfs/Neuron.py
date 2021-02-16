@@ -1,8 +1,17 @@
+from enum import Enum
+from neuro_clfs.Connection import Connection
+
+
 class Neuron:
 
-    Types = enum('Direct', 'McCulloch', 'Bias', 'BipolarSigmoid', 'CustomSigmoid')
+    class Type(Enum):
+        Direct = 0
+        McCulloch = 1
+        Bias = 2
+        BipolarSigmoid = 3
+        CustomSigmoid = 4
 
-    def __init__(self, threshold, type, active_output = None, inactive_output = None):
+    def __init__(self, threshold, type, active_output=None, inactive_output=None):
         self.threshold = threshold
         self.type = type
         self.active_output = active_output
@@ -14,23 +23,23 @@ class Neuron:
     def free():
         pass
 
-    def initialise(value):
+    def initialise(self, value):
         self.value = value
 
-    def connect(neuron, weight):
-        self.connections.append(Connection(neuron, weight))
+    def connect(self, neuron, weight):
+        self.connections.append(Connection(weight, neuron))
 
-    def trigger():
-        if self.type is Types.Direct:
+    def trigger(self):
+        if self.type is Neuron.Type.Direct:
             self.f_x = self.value
-        else if self.type is Types.Bias:
+        elif self.type is Neuron.Type.Bias:
             self.f_x = 1.0
-        else if self.type is Types.McCulloch:
+        elif self.type is Neuron.Type.McCulloch:
             self.f_x = self.active_output if self.value >= self.threshold else self.inactive_output
         # else
-        for conection in self.connections:
+        for connection in self.connections:
             connection.received_value = self.f_x
 
-    def propagate():
+    def propagate(self):
         for connection in self.connections:
             connection.propagate()

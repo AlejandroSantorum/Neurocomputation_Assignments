@@ -1,5 +1,5 @@
 class NeuralNetwork:
-    def __init__():
+    def __init__(self):
         self.layers = []
 
     def free():
@@ -8,13 +8,13 @@ class NeuralNetwork:
     def initialise():
         pass
 
-    def add(layer):
+    def add(self, layer):
         self.layers.append(layer)
 
-    def trigger():
+    def trigger(self):
         for layer in self.layers:
             layer.trigger()
 
-    def propagate():
+    def propagate(self):
         for layer in self.layers:
             layer.propagate()
