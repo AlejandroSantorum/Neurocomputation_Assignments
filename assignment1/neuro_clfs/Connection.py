@@ -5,8 +5,8 @@ class Connection:
         self.neuron = neuron
         self.received_value = None
 
-    def Free():
+    def free():
         pass
 
-    def Propagate():
+    def propagate():
         self.neuron.value += self.weight * self.received_value

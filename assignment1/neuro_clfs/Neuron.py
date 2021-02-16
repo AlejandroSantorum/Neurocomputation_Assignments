@@ -1,5 +1,7 @@
 class Neuron:
+
     Types = enum('Direct', 'McCulloch', 'Bias', 'BipolarSigmoid', 'CustomSigmoid')
+
     def __init__(self, threshold, type, active_output = None, inactive_output = None):
         self.threshold = threshold
         self.type = type
@@ -9,16 +11,16 @@ class Neuron:
         self.f_x = 0
         self.value = 0
 
-    def Free():
+    def free():
         pass
 
-    def Initialise(value):
+    def initialise(value):
         self.value = value
 
-    def Connect(neuron, weight):
+    def connect(neuron, weight):
         self.connections.append(Connection(neuron, weight))
 
-    def Trigger():
+    def trigger():
         if self.type is Types.Direct:
             self.f_x = self.value
         else if self.type is Types.Bias:
@@ -29,6 +31,6 @@ class Neuron:
         for conection in self.connections:
             connection.received_value = self.f_x
 
-    def Propagate():
+    def propagate():
         for connection in self.connections:
             connection.propagate()

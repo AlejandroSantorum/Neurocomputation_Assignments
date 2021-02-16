@@ -2,25 +2,25 @@ class Layer:
     def __init__():
         self.neurons = []
 
-    def Free():
+    def free():
         pass
 
-    def Initialise():
+    def initialise():
         pass
 
-    def Add(neuron):
+    def add(neuron):
         self.neurons.append(neuron)
 
-    def ConnectLayer(layer, weight_mode):
+    def connectLayer(layer, weight_mode):
         pass
 
-    def ConnectNeuron(neuron, weight_mode):
+    def connectNeuron(neuron, weight_mode):
         pass
 
-    def Trigger():
+    def trigger():
         for neuron in self.neurons:
-            neuron.Trigger()
+            neuron.trigger()
 
-    def Propagate():
+    def propagate():
         for neuron in self.neurons:
-            neuron.Propagate()
+            neuron.propagate()
