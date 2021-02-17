@@ -37,6 +37,7 @@ class Neuron:
         elif self.type is Neuron.Type.McCulloch:
             self.f_x = self.active_output if self.value >= self.threshold else self.inactive_output
         # else
+        self.value = 0
         for connection in self.connections:
             connection.received_value = self.f_x
 

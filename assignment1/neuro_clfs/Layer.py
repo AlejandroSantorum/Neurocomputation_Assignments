@@ -36,6 +36,4 @@ class Layer:
 
     def propagate(self):
         for neuron in self.neurons:
-            neuron.value = 0
-        for neuron in self.neurons:
             neuron.propagate()

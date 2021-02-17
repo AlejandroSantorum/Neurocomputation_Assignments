@@ -16,5 +16,5 @@ class NeuralNetwork:
             layer.trigger()
 
     def propagate(self):
-        for layer in reversed(self.layers):
+        for layer in self.layers:
             layer.propagate()
