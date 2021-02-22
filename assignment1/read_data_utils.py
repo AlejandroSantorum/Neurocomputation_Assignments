@@ -64,16 +64,28 @@ def read1(data_file, perc):
         t_train = []
         for i in range(ntrain_examples):
             data_line = file_lines[i][:-1].split()
-            s_train.append(data_line[:M])
-            t_train.append(data_line[M:])
+            s_aux = []
+            t_aux = []
+            for i in range(M):
+                s_aux.append(float(data_line[i]))
+            for i in range(M,len(data_line)):
+                t_aux.append(float(data_line[i]))
+            s_train.append(s_aux)
+            t_train.append(t_aux)
 
         # building test set
         s_test = []
         t_test = []
         for j in range(ntrain_examples, total_lines):
             data_line = file_lines[j][:-1].split()
-            s_test.append(data_line[:M])
-            t_test.append(data_line[M:])
+            s_aux = []
+            t_aux = []
+            for i in range(M):
+                s_aux.append(float(data_line[i]))
+            for i in range(M,len(data_line)):
+                t_aux.append(float(data_line[i]))
+            s_test.append(s_aux)
+            t_test.append(t_aux)
 
     return s_train, t_train, s_test, t_test
 
@@ -96,9 +108,14 @@ def read2(data_file):
         t = []
         for line in file_lines:
             data_line = line[:-1].split()
-            print(data_line)
-            s.append(data_line[:M])
-            t.append(data_line[M:])
+            s_aux = []
+            t_aux = []
+            for i in range(M):
+                s_aux.append(float(data_line[i]))
+            for i in range(M,len(data_line)):
+                t_aux.append(float(data_line[i]))
+            s.append(s_aux)
+            t.append(t_aux)
 
     return s, t, s, t
 
@@ -120,8 +137,14 @@ def read3(train_file, test_file):
         t_train = []
         for line in file_lines:
             data_line = line[:-1].split()
-            s_train.append(data_line[:M])
-            t_train.append(data_line[M:])
+            s_aux = []
+            t_aux = []
+            for i in range(M):
+                s_aux.append(float(data_line[i]))
+            for i in range(M,len(data_line)):
+                t_aux.append(float(data_line[i]))
+            s_train.append(s_aux)
+            t_train.append(t_aux)
 
     with open(test_file, 'r') as f:
         # reading number of features (M) and number of classes (N)
@@ -137,7 +160,13 @@ def read3(train_file, test_file):
         t_test = []
         for line in file_lines:
             data_line = line[:-1].split()
-            s_test.append(data_line[:M])
-            t_test.append(data_line[M:])
+            s_aux = []
+            t_aux = []
+            for i in range(M):
+                s_aux.append(float(data_line[i]))
+            for i in range(M,len(data_line)):
+                t_aux.append(float(data_line[i]))
+            s_train.append(s_aux)
+            t_train.append(t_aux)
 
     return s_train, t_train, s_test, t_test
