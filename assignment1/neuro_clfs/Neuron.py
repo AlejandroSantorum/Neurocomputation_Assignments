@@ -58,3 +58,12 @@ class Neuron:
     def propagate(self):
         for connection in self.connections:
             connection.propagate()
+
+    def print_neuron(self):
+        print("\t\t\tValue:", self.value)
+        print("\t\t\tF_x:", self.f_x)
+        for (i,conn) in enumerate(self.connections):
+            print("\t\t\tConnection", i)
+            conn.print_connection()
+
+

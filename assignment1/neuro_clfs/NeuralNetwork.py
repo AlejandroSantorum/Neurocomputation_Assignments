@@ -28,6 +28,11 @@ class NeuralNetwork:
 
     def get_output(self):
         output_vals = []
-        for neuron in self.layers[-1]:
+        for neuron in self.layers[-1].neurons:
             output_vals.append(neuron.f_x)
         return output_vals
+
+    def print_nn(self):
+        for (i, layer) in enumerate(self.layers):
+            print("\tLayer", i)
+            layer.print_layer()

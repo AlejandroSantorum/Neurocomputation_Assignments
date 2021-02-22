@@ -23,6 +23,8 @@ def read_input_params():
         alpha = float(sys.argv[3])
         if len(sys.argv) == 5:
             threshold = float(sys.argv[4])
+        else:
+            threshold = 0.0
 
     else: # default value
         alpha = 1.0
@@ -43,7 +45,7 @@ def build_perceptron_nn(n_inputs, threshold):
     for i in range(n_inputs):
         input_layer.add(Neuron(Neuron.Type.Direct))
 
-    output_layer.add(Neuron(Neuron.Type.Perceptron, threshold=threshold))
+    output_layer.add(Neuron(Neuron.Type.Perceptron, threshold=threshold, active_output=1, inactive_output=-1))
     # Layer.WeightMode.PerceptronWeight = Layer.WeightMode.ZeroWeight
     input_layer.connectLayer(output_layer, Layer.WeightMode.ZeroWeight)
 
@@ -61,24 +63,38 @@ def train_perceptron_nn(nn, sets, alpha):
     input_layer = nn.layers[0]
     output_layer = nn.layers[1]
 
-    while nn.any_weight_update():
+    update_flag = True
+    while update_flag:
+
+        update_flag = False
+
         for i in range(n_train):
             # Step 3: init input layer values
             for (j, neuron) in enumerate(input_layer.neurons[1:]):
                 neuron.initialise(s[i][j])
+
+            #nn.print_nn()
             # Step 4: calculate output neuron response
             nn.trigger()
             nn.propagate()
+            y_in = output_layer.neurons[0].value
+            nn.trigger()
             # Step 5: update weights (if needed)
+            #print("Output value (y_in):", y_in, "Output y:", output_layer.neurons[0].f_x, "t_i", t[i][0])
             if output_layer.neurons[0].f_x != t[i][0]:
                 # updating w_i
                 for (j, neuron) in enumerate(input_layer.neurons[1:]):
+                    #print("j-esimo term:", alpha*t[i][0]*s[i][j])
                     neuron.connections[0].update_weight(alpha*t[i][0]*s[i][j])
                 # updating b
+                #print("b term:", alpha*t[i][0])
                 input_layer.neurons[0].connections[0].update_weight(alpha*t[i][0])
             else:
-                for neuron in enumerate(input_layer.neurons):
+                for neuron in input_layer.neurons:
                     neuron.connections[0].update_weight(0) # term = 0
+
+            if nn.any_weight_update():
+                update_flag = True
 
     return nn
 
@@ -87,12 +103,14 @@ def test_perceptron_nn(nn, sets):
     (_, _, s, t) = sets
 
     n_test = len(s)
+    input_layer = nn.layers[0]
 
     for i in range(n_test):
         # init input layer values
         for (j, neuron) in enumerate(input_layer.neurons[1:]):
             neuron.initialise(s[i][j])
         # calculate output neuron response
+        nn.trigger()
         nn.propagate()
         nn.trigger()
 
@@ -104,7 +122,7 @@ def test_perceptron_nn(nn, sets):
 
 if __name__ == '__main__':
     read_mode, sets, alpha, threshold = read_input_params()
-    print(sets)
+    #print(sets)
 
     # n_inputs = len(sets[0][0]) = length of a matrix row
     nn = build_perceptron_nn(len(sets[0][0]), threshold)

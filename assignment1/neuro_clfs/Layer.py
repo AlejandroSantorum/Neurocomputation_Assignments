@@ -46,3 +46,8 @@ class Layer:
     def propagate(self):
         for neuron in self.neurons:
             neuron.propagate()
+
+    def print_layer(self):
+        for (i, neuron) in enumerate(self.neurons):
+            print("\t\tNeuron", i)
+            neuron.print_neuron()
