@@ -6,7 +6,14 @@ class NeuralNetwork:
         pass
 
     def initialise():
-        pass
+        for layer in self.layers:
+            layer.initialise()
+
+    def any_weight_update(self):
+        for layer in self.layers:
+            if layer.any_weight_update():
+                return True
+        return False
 
     def add(self, layer):
         self.layers.append(layer)
@@ -18,3 +25,9 @@ class NeuralNetwork:
     def propagate(self):
         for layer in self.layers:
             layer.propagate()
+
+    def get_output(self):
+        output_vals = []
+        for neuron in self.layers[-1]:
+            output_vals.append(neuron.f_x)
+        return output_vals

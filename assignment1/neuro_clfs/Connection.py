@@ -5,8 +5,14 @@ class Connection:
         self.neuron = neuron
         self.received_value = None
 
-    def free():
-        pass
+    def update_weight(self, term):
+        self.former_weight = self.weight
+        self.weight = self.weight + term
+
+    def any_weight_update(self):
+        if self.former_weight == self.weight:
+            return False
+        return True
 
     def propagate(self):
         self.neuron.value += self.weight * self.received_value

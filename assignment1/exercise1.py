@@ -11,19 +11,19 @@ def build_nn_ex1():
     hidden_layer = Layer()
     output_layer = Layer()
 
-    x1 = Neuron(0.5, Neuron.Type.Direct)
-    x2 = Neuron(0.5, Neuron.Type.Direct)
-    x3 = Neuron(0.5, Neuron.Type.Direct)
+    x1 = Neuron(Neuron.Type.Direct)
+    x2 = Neuron(Neuron.Type.Direct)
+    x3 = Neuron(Neuron.Type.Direct)
     input_layer.add(x1)
     input_layer.add(x2)
     input_layer.add(x3)
-    h1 = Neuron(2, Neuron.Type.McCulloch, 1, 0)
-    h2 = Neuron(2, Neuron.Type.McCulloch, 1, 0)
-    h3 = Neuron(2, Neuron.Type.McCulloch, 1, 0)
+    h1 = Neuron(Neuron.Type.McCulloch, threshold=2, 1, 0)
+    h2 = Neuron(Neuron.Type.McCulloch, threshold=2, 1, 0)
+    h3 = Neuron(Neuron.Type.McCulloch, threshold=2, 1, 0)
     hidden_layer.add(h1)
     hidden_layer.add(h2)
     hidden_layer.add(h3)
-    o1 = Neuron(1, Neuron.Type.McCulloch, 1, 0)
+    o1 = Neuron(Neuron.Type.McCulloch, threshold=1, 1, 0)
     output_layer.add(o1)
 
     # a12
@@ -87,7 +87,7 @@ if __name__ == "__main__":
 #   3) Cabeceras de ficheros, funciones y un par de comentarios (pydoc)
 
 ## Preguntas:
-#   1) ¿Hay que mostrar el estado de la capa oculta/salida despues de que se acaben los ejemplos?
-#   2) ¿Podríamos simplificar la red neuronal para que se obtiviese la salida correcta en t+1?
-#   3) ¿Es una OR de tres entradas o el circuito de la figura 2?
-#   4) ¿Es necesario utilizar gitlab o podemos usar github?
+#   1) ¿Hay que mostrar el estado de la capa oculta/salida despues de que se acaben los ejemplos? -> Sí, poniendo entradas "basura"
+#   2) ¿Podríamos simplificar la red neuronal para que se obtiviese la salida correcta en t+1? -> No
+#   3) ¿Es una OR de tres entradas o el circuito de la figura 2? -> El de la figura
+#   4) ¿Es necesario utilizar gitlab o podemos usar github? -> Github

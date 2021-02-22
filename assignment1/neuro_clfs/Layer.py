@@ -1,10 +1,11 @@
 from enum import Enum
+import random
 
 class Layer:
 
     class WeightMode(Enum):
         ZeroWeight = 0
-        PerceptronWeight = 1
+        AdalineWeight = 1
 
     def __init__(self):
         self.neurons = []
@@ -13,7 +14,14 @@ class Layer:
         pass
 
     def initialise():
-        pass
+        for neuron in self.neurons:
+            neuron.initialise()
+
+    def any_weight_update(self):
+        for neuron in self.neurons:
+            if neuron.any_weight_update():
+                return True
+        return False
 
     def add(self, neuron):
         self.neurons.append(neuron)
@@ -27,8 +35,9 @@ class Layer:
             for orig_neuron in self.neurons:
                 orig_neuron.connect(neuron, 0)
 
-        elif weight_mode is Layer.WeightMode.PerceptronWeight:
-            pass
+        elif weight_mode is Layer.WeightMode.AdalineWeight:
+            for orig_neuron in self.neurons:
+                orig_neuron.connect(neuron, random.uniform(-0.5, 0.5))
 
     def trigger(self):
         for neuron in self.neurons:
