@@ -130,3 +130,9 @@ if __name__ == '__main__':
     nn = train_perceptron_nn(nn, sets, alpha, tol)
 
     test_perceptron_nn(nn, sets)
+
+
+# THINGS TO DO:
+    # 1) Vectorize code
+    # 2) ¿Number of iterations instead of tolerance?
+    # 3) ¿Print loss per epoch?
