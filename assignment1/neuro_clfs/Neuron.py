@@ -41,6 +41,8 @@ class Neuron:
             self.f_x = self.value
         elif self.type is Neuron.Type.Bias:
             self.f_x = 1.0
+        elif self.type is Neuron.Type.BipolarSigmoid:
+            self.f_x = 1 if self.value >= 0 else -1
         elif self.type is Neuron.Type.McCulloch:
             self.f_x = self.active_output if self.value >= self.threshold else self.inactive_output
         elif self.type is Neuron.Type.Perceptron:
@@ -65,5 +67,3 @@ class Neuron:
         for (i,conn) in enumerate(self.connections):
             print("\t\t\tConnection", i)
             conn.print_connection()
-
-

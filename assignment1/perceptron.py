@@ -5,6 +5,8 @@ from neuro_clfs.Neuron import Neuron
 from read_data_utils import parse_read_mode
 
 
+DEFAULT_ALPHA = 1.0
+DEFAULT_TH = 0.0
 # perceptron.py read_mode file1 [file2] alpha threshold
 def read_input_params():
     # Reading train/test sets depending on given read mode
@@ -24,11 +26,11 @@ def read_input_params():
         if len(sys.argv) == 5:
             threshold = float(sys.argv[4])
         else:
-            threshold = 0.0
+            threshold = DEFAULT_TH
 
     else: # default value
-        alpha = 1.0
-        threshold = 0.0
+        alpha = DEFAULT_ALPHA
+        threshold = DEFAULT_TH
 
     return read_mode, sets, alpha, threshold
 
@@ -77,7 +79,7 @@ def train_perceptron_nn(nn, sets, alpha):
             # Step 4: calculate output neuron response
             nn.trigger()
             nn.propagate()
-            y_in = output_layer.neurons[0].value
+            #y_in = output_layer.neurons[0].value
             nn.trigger()
             # Step 5: update weights (if needed)
             #print("Output value (y_in):", y_in, "Output y:", output_layer.neurons[0].f_x, "t_i", t[i][0])
@@ -122,9 +124,7 @@ def test_perceptron_nn(nn, sets):
 
 if __name__ == '__main__':
     read_mode, sets, alpha, threshold = read_input_params()
-    #print(sets)
 
-    # n_inputs = len(sets[0][0]) = length of a matrix row
     nn = build_perceptron_nn(len(sets[0][0]), threshold)
 
     nn = train_perceptron_nn(nn, sets, alpha)
