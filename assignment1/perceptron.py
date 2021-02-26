@@ -1,3 +1,19 @@
+######################################################################################
+#
+#   Authors:
+#       · Alejandro Santorum Varela - alejandro.santorum@estudiante.uam.es
+#       · Sergio Galán Martín - sergio.galanm@estudiante.uam.es
+#       
+#   File: adaline.py
+#   Date: Feb. 25, 2021
+#   Project: Assignment 1 - Neurocomputation [EPS-UAM]
+#
+#   Description: This file contains the implementation of the perceptron learning
+#       procedure for a neural network of 1 layer.
+#
+######################################################################################
+
+
 import sys
 from neuro_clfs.NeuralNetwork import NeuralNetwork
 from neuro_clfs.Layer import Layer

@@ -1,3 +1,19 @@
+######################################################################################
+#
+#   Authors:
+#       · Alejandro Santorum Varela - alejandro.santorum@estudiante.uam.es
+#       · Sergio Galán Martín - sergio.galanm@estudiante.uam.es
+#       
+#   File: Layer.py
+#   Date: Feb. 20, 2021
+#   Project: Assignment 1 - Neurocomputation [EPS-UAM]
+#
+#   Description: This file contains the implementation of class Layer, which goal
+#       is to group several neurons allocated at the same depth of a neural
+#       network.
+#
+######################################################################################
+
 from enum import Enum
 import random
 
