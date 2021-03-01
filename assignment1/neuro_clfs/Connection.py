@@ -1,18 +1,18 @@
-######################################################################################
-#
-#   Authors:
-#       · Alejandro Santorum Varela - alejandro.santorum@estudiante.uam.es
-#       · Sergio Galán Martín - sergio.galanm@estudiante.uam.es
-#       
-#   File: Connection.py
-#   Date: Feb. 20, 2021
-#   Project: Assignment 1 - Neurocomputation [EPS-UAM]
-#
-#   Description: This file contains the implementation of class Connection, which
-#       goal is to transfer information (weights, activations, etc.) through
-#       different types of neural networks. 
-#
-######################################################################################
+'''
+
+    Authors:
+        · Alejandro Santorum Varela - alejandro.santorum@estudiante.uam.es
+        · Sergio Galán Martín - sergio.galanm@estudiante.uam.es
+
+    File: Connection.py
+    Date: Feb. 20, 2021
+    Project: Assignment 1 - Neurocomputation [EPS-UAM]
+
+    Description: This file contains the implementation of class Connection, which
+        goal is to transfer information (weights, activations, etc.) through
+        different types of neural networks.
+
+'''
 
 
 class Connection:

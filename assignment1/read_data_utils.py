@@ -1,17 +1,17 @@
-######################################################################################
-#
-#   Authors:
-#       · Alejandro Santorum Varela - alejandro.santorum@estudiante.uam.es
-#       · Sergio Galán Martín - sergio.galanm@estudiante.uam.es
-#       
-#   File: read_data_utils.py
-#   Date: Feb. 20, 2021
-#   Project: Assignment 1 - Neurocomputation [EPS-UAM]
-#
-#   Description: This file contains the implementation of several reading functions.
-#       Its goal is to read the dataset/s and return the specified parameters.
-#
-######################################################################################
+'''
+
+    Authors:
+        · Alejandro Santorum Varela - alejandro.santorum@estudiante.uam.es
+        · Sergio Galán Martín - sergio.galanm@estudiante.uam.es
+
+    File: read_data_utils.py
+    Date: Feb. 20, 2021
+    Project: Assignment 1 - Neurocomputation [EPS-UAM]
+
+    Description: This file contains the implementation of several reading functions.
+        Its goal is to read the dataset/s and return the specified parameters.
+
+'''
 
 
 import sys, math, random
