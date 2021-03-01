@@ -82,9 +82,16 @@ def train_perceptron_nn(nn, sets, alpha, tol):
     input_layer = nn.layers[0]
     output_layer = nn.layers[1]
 
+    cont = 0
+
     while True:
         max_update = 0
         for i in range(n_train):
+
+            cont+=1
+            if cont == 10:
+                exit()
+
             # Step 3: init input layer values
             for (j, neuron) in enumerate(input_layer.neurons[1:]):
                 neuron.initialise(s[i][j])
@@ -96,11 +103,11 @@ def train_perceptron_nn(nn, sets, alpha, tol):
             nn.propagate()
             # Step 5: update weights
             y_in = output_layer.neurons[0].value
-            #print("Output value (y_in):", y_in, "Output y:", output_layer.neurons[0].f_x, "t_i", t[i][0])
+            #print("Output value (y_in):", y_in, "t_i", t[i][0])
             # updating w_i
             for (j, neuron) in enumerate(input_layer.neurons[1:]):
                 update_value = alpha*(t[i][0] - y_in)*s[i][j]
-                #print("j-esimo term:", update_value)
+                print("j-esimo term:", update_value)
                 neuron.connections[0].update_weight(update_value)
                 if abs(update_value) > max_update:
                     max_update = abs(update_value)
@@ -110,6 +117,8 @@ def train_perceptron_nn(nn, sets, alpha, tol):
             input_layer.neurons[0].connections[0].update_weight(update_value)
             if abs(update_value) > max_update:
                 max_update = abs(update_value)
+
+            #print("Max_update", max_update)
 
         if max_update < tol:
             break

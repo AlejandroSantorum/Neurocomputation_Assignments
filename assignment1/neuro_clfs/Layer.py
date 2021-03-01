@@ -8,7 +8,7 @@
     Date: Feb. 20, 2021
     Project: Assignment 1 - Neurocomputation [EPS-UAM]
 
-    Description: This file contains the implementation of class Layer, which goal
+    Description: This file contains the implementation of class Layer, whose goal
         is to group several neurons allocated at the same depth of a neural
         network.
 
@@ -18,22 +18,41 @@ from enum import Enum
 import random
 
 class Layer:
+    '''
+        Implementation of class Layer, whose goal is to group several neurons
+        allocated at the same depth of a neural network.
+    '''
 
     class WeightMode(Enum):
+        '''
+            Enumeration to describe layers weigth mode.
+        '''
         ZeroWeight = 0
         AdalineWeight = 1
 
     def __init__(self):
+        '''
+            Constructor of a new object 'Layer'.
+
+            :return: None
+        '''
         self.neurons = []
 
-    def free():
-        pass
-
     def initialise():
+        '''
+            It initialises the values of the neurons of the current Layer.
+
+            :return: None
+        '''
         for neuron in self.neurons:
             neuron.initialise()
 
     def any_weight_update(self):
+        '''
+            Checks whether any weight of any output connection of the neuron has been update.
+
+            :return: Boolean. True if any connection has been updated, False otherwise
+        '''
         for neuron in self.neurons:
             if neuron.any_weight_update():
                 return True
@@ -53,7 +72,8 @@ class Layer:
 
         elif weight_mode is Layer.WeightMode.AdalineWeight:
             for orig_neuron in self.neurons:
-                orig_neuron.connect(neuron, random.uniform(-0.5, 0.5))
+                #orig_neuron.connect(neuron, random.uniform(-0.5, 0.5))
+                orig_neuron.connect(neuron, 0.1)
 
     def trigger(self):
         for neuron in self.neurons:
