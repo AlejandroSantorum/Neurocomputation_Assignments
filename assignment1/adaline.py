@@ -85,12 +85,12 @@ def train_perceptron_nn(nn, sets, alpha, tol):
     cont = 0
 
     while True:
-        max_update = 0
+        updates = [0]*len(input_layer.neurons)
         for i in range(n_train):
-
-            cont+=1
-            if cont == 10:
-                exit()
+            # 
+            # cont+=1
+            # if cont == 100:
+            #     exit()
 
             # Step 3: init input layer values
             for (j, neuron) in enumerate(input_layer.neurons[1:]):
@@ -109,17 +109,20 @@ def train_perceptron_nn(nn, sets, alpha, tol):
                 update_value = alpha*(t[i][0] - y_in)*s[i][j]
                 print("j-esimo term:", update_value)
                 neuron.connections[0].update_weight(update_value)
-                if abs(update_value) > max_update:
-                    max_update = abs(update_value)
+                updates[j] += update_value
+                # if abs(update_value) > max_update:
+                #     max_update = abs(update_value)
             # updating b
             update_value = alpha*(t[i][0] - y_in)
             #print("b term:", update_value)
             input_layer.neurons[0].connections[0].update_weight(update_value)
-            if abs(update_value) > max_update:
-                max_update = abs(update_value)
+            updates[-1] += update_value
+            # if abs(update_value) > max_update:
+            #     max_update = abs(update_value)
 
             #print("Max_update", max_update)
-
+        max_update = max(map(abs,updates))
+        print(max_update)
         if max_update < tol:
             break
     return nn
