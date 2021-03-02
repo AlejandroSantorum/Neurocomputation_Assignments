@@ -72,8 +72,7 @@ class Layer:
 
         elif weight_mode is Layer.WeightMode.AdalineWeight:
             for orig_neuron in self.neurons:
-                #orig_neuron.connect(neuron, random.uniform(-0.5, 0.5))
-                orig_neuron.connect(neuron, 0.1)
+                orig_neuron.connect(neuron, random.uniform(-0.5, 0.5))
 
     def trigger(self):
         for neuron in self.neurons:

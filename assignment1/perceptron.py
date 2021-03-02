@@ -3,7 +3,7 @@
         · Alejandro Santorum Varela - alejandro.santorum@estudiante.uam.es
         · Sergio Galán Martín - sergio.galanm@estudiante.uam.es
 
-    File: adaline.py
+    File: perceptron.py
     Date: Feb. 25, 2021
     Project: Assignment 1 - Neurocomputation [EPS-UAM]
 

@@ -24,7 +24,7 @@ DEBUG_FLAG = False
 
 DEFAULT_ALPHA = 0.1
 DEFAULT_TOL = 0.001
-# perceptron.py read_mode file1 [file2] alpha tol
+# adaline.py read_mode file1 [file2] alpha tol
 def read_input_params():
     # Reading train/test sets depending on given read mode
     read_mode, sets = parse_read_mode()
@@ -82,15 +82,9 @@ def train_perceptron_nn(nn, sets, alpha, tol):
     input_layer = nn.layers[0]
     output_layer = nn.layers[1]
 
-    cont = 0
-
     while True:
         updates = [0]*len(input_layer.neurons)
         for i in range(n_train):
-            # 
-            # cont+=1
-            # if cont == 100:
-            #     exit()
 
             # Step 3: init input layer values
             for (j, neuron) in enumerate(input_layer.neurons[1:]):
