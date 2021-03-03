@@ -4,7 +4,7 @@
         · Alejandro Santorum Varela - alejandro.santorum@estudiante.uam.es
         · Sergio Galán Martín - sergio.galanm@estudiante.uam.es
 
-    File: exercise1.py
+    File: ex_mcculloch_pitts.py
     Date: Feb. 20, 2021
     Project: Assignment 1 - Neurocomputation [EPS-UAM]
 
