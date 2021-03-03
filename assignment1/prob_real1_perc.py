@@ -23,7 +23,7 @@ from tabulate import tabulate
 FILE_PATH = "test_files/problema_real1.txt"
 
 DEFAULT_ALPHA = 1.0
-DEFAULT_TH = 0.0
+DEFAULT_TH = 0.2
 DEFAULT_NREPS = 10
 DEFAULT_PERCENTAGE = 0.75
 
@@ -84,7 +84,7 @@ def exec_real1(alpha, threshold, num_reps):
         # TODO: Coger una sola columna objetivo (target)
         n_inputs = len(xtrain[0])
 
-        perc_nn = Perceptron(n_inputs, threshold, alpha)
+        perc_nn = Perceptron(n_inputs, threshold=threshold, alpha=alpha)
 
         perc_nn.train(xtrain, ytrain)
         ypred = perc_nn.predict(xtest)
