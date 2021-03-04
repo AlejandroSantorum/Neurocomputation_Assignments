@@ -54,10 +54,13 @@ def main(read_mode, sets, alpha, threshold):
     xtrain, ytrain, xtest, ytest = sets
 
     n_inputs = len(xtrain[0])
+    n_outputs = len(ytrain[0])
 
-    perc_nn = Perceptron(n_inputs, threshold, alpha)
+    perc_nn = Perceptron(n_inputs, n_outputs, threshold, alpha)
 
+    print("About to train")
     perc_nn.train(xtrain, ytrain)
+    print("Trained")
     ypred = perc_nn.predict(xtest)
 
     results = []

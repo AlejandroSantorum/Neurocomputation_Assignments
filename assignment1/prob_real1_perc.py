@@ -70,7 +70,8 @@ def val_hyperparams():
         for alpha in ALPHAS:
             mse, std = exec_real1(alpha, th, DEFAULT_NREPS)
             L.append(str(mse)+' +- '+str(std))
-    L_RES.append(L)
+            print("Alpha:", alpha, "Threshold:", th, "---> mse:", mse)
+        L_RES.append(L)
     print(tabulate(L_RES, headers=headers, tablefmt="grid"))
 
 
@@ -83,8 +84,9 @@ def exec_real1(alpha, threshold, num_reps):
         xtrain, ytrain, xtest, ytest = sets
         # TODO: Coger una sola columna objetivo (target)
         n_inputs = len(xtrain[0])
+        n_outputs = len(ytrain[0])
 
-        perc_nn = Perceptron(n_inputs, threshold=threshold, alpha=alpha)
+        perc_nn = Perceptron(n_inputs, n_outputs, threshold=threshold, alpha=alpha)
 
         perc_nn.train(xtrain, ytrain)
         ypred = perc_nn.predict(xtest)
@@ -92,7 +94,7 @@ def exec_real1(alpha, threshold, num_reps):
         mse_list.append(mse)
 
     mse_list = np.asarray(mse_list)
-    return mse_list.mean(), mse_list.std()
+    return round(mse_list.mean(),5), round(mse_list.std(),3)
 
 
 

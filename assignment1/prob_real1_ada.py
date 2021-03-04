@@ -27,7 +27,7 @@ DEFAULT_TOL = 0.001
 DEFAULT_NREPS = 10
 DEFAULT_PERCENTAGE = 0.75
 
-# prob_real1_perc.py [-hyper] [-a alpha] [-tol tolerance] [-nreps num_reps]
+# prob_real1_ada.py [-hyper] [-a alpha] [-tol tolerance] [-nreps num_reps]
 def read_input_params():
     alpha = DEFAULT_ALPHA
     tol = DEFAULT_TOL
@@ -56,8 +56,8 @@ def read_input_params():
 
 
 
-ALPHAS = [0.001, 0.005, 0.01, 0.05, 0.1, 0.5, 1]
-TOLS = [0.1, 0.01, 0.001, 0.0001]
+ALPHAS = [0.001, 0.005, 0.01, 0.05, 0.1]
+TOLS = [0.1, 0.05, 0.01, 0.005, 0.001]
 
 def val_hyperparams():
     headers = ["Thresholds \ Alphas"]
@@ -66,11 +66,12 @@ def val_hyperparams():
 
     L_RES = []
     for tol in TOLS:
-        L = [str(th)]
+        L = [str(tol)]
         for alpha in ALPHAS:
             mse, std = exec_real1(alpha, tol, DEFAULT_NREPS)
             L.append(str(mse)+' +- '+str(std))
-    L_RES.append(L)
+            print("Alpha:", alpha, "Tolerance:", tol, "---> mse:", mse)
+        L_RES.append(L)
     print(tabulate(L_RES, headers=headers, tablefmt="grid"))
 
 
@@ -81,10 +82,11 @@ def exec_real1(alpha, tol, num_reps):
         # reading training and test sets
         sets = read1(FILE_PATH, DEFAULT_PERCENTAGE)
         xtrain, ytrain, xtest, ytest = sets
-        # TODO: Coger una sola columna objetivo (target)
-        n_inputs = len(xtrain[0])
 
-        ada_nn = Adaline(n_inputs, alpha=alpha, tol=tol)
+        n_inputs = len(xtrain[0])
+        n_outputs = len(ytrain[0])
+
+        ada_nn = Adaline(n_inputs, n_outputs, alpha=alpha, tol=tol)
 
         ada_nn.train(xtrain, ytrain)
         ypred = ada_nn.predict(xtest)
@@ -92,7 +94,7 @@ def exec_real1(alpha, tol, num_reps):
         mse_list.append(mse)
 
     mse_list = np.asarray(mse_list)
-    return mse_list.mean(), mse_list.std()
+    return round(mse_list.mean(),5), round(mse_list.std(),3)
 
 
 

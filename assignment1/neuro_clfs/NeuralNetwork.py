@@ -65,7 +65,7 @@ class NeuralNetwork:
         '''
             Return the output values of every neuron in the neural network.
 
-            :return: returns None
+            :return: a list of output values
         '''
         output_vals = []
         for neuron in self.layers[-1].neurons:

@@ -1,5 +1,6 @@
 
 from abc import ABCMeta,abstractmethod
+import numpy as np
 
 
 class NNClassifier:
@@ -26,9 +27,12 @@ class NNClassifier:
             # miss rate is the complement of hit rate
             return 1-hit_rate
         # Mean Squared Error
-        if metric == 'mse':
+        if metric == 'mse': # TODO: review
             n_test = len(ytrue)
-            s = 0
-            for i in range(n_test):
-                s += (ytrue[i] - ypred[i])**2
-            return (1/n_test)*s
+            n_outputs = len(ytrue[0])
+            S = [0]*n_outputs
+            for j in range(n_outputs):
+                for i in range(n_test):
+                    S[j] += (ytrue[i][j] - ypred[i][j])**2
+            S = np.asarray(S)
+            return (1/n_test)*S.mean()

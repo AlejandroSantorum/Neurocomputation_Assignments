@@ -5,7 +5,7 @@ from .Neuron import Neuron
 
 class Perceptron(NNClassifier):
 
-    def __init__(self, n_inputs, threshold=0.1, alpha=1.0, verbose=False):
+    def __init__(self, n_inputs, n_outputs, threshold=0.1, alpha=1.0, verbose=False):
         self.threshold = threshold
         self.alpha = alpha
         self.verbose = verbose
@@ -20,7 +20,8 @@ class Perceptron(NNClassifier):
         for i in range(n_inputs):
             input_layer.add(Neuron(Neuron.Type.Direct))
 
-        output_layer.add(Neuron(Neuron.Type.Perceptron, threshold=threshold, active_output=1, inactive_output=-1))
+        for i in range(n_outputs):
+            output_layer.add(Neuron(Neuron.Type.Perceptron, threshold=threshold, active_output=1, inactive_output=-1))
         # WeightMode PerceptronWeight = WeightMode ZeroWeight
         input_layer.connectLayer(output_layer, Layer.WeightMode.ZeroWeight)
 
@@ -56,15 +57,28 @@ class Perceptron(NNClassifier):
                 self.nn.propagate()
                 self.nn.trigger()
                 # update weights (if needed)
-                if output_layer.neurons[0].f_x != ytrain[i][0]:
-                    # updating w_i
-                    for (j, neuron) in enumerate(input_layer.neurons[1:]):
-                        neuron.connections[0].update_weight(self.alpha*ytrain[i][0]*xtrain[i][j])
-                    # updating b
-                    input_layer.neurons[0].connections[0].update_weight(self.alpha*ytrain[i][0])
-                else:
-                    for neuron in input_layer.neurons:
-                        neuron.connections[0].update_weight(0) # term = 0
+                for (j, neuron_out) in enumerate(output_layer.neurons):
+                    if neuron_out.f_x != ytrain[i][j]:
+                        # updating w_i
+                        for (k, neuron_in) in enumerate(input_layer.neurons[1:]):
+                            neuron_in.connections[j].update_weight(self.alpha*ytrain[i][j]*xtrain[i][k])
+                        # updating b
+                        input_layer.neurons[0].connections[j].update_weight(self.alpha*ytrain[i][j])
+
+                    else:
+                        for neuron_in in input_layer.neurons:
+                            neuron_in.connections[j].update_weight(0) # term = 0
+
+                # if output_layer.neurons[0].f_x != ytrain[i][0]:
+                #     # updating w_i
+                #     for (k, neuron) in enumerate(input_layer.neurons[1:]):
+                #         neuron.connections[0].update_weight(self.alpha*ytrain[i][0]*xtrain[i][k])
+                #     # updating b
+                #     input_layer.neurons[0].connections[0].update_weight(self.alpha*ytrain[i][0])
+                # else:
+                #     for neuron in input_layer.neurons:
+                #         neuron.connections[0].update_weight(0) # term = 0
+
                 # checking if any former weight is different than current weight
                 if self.nn.any_weight_update():
                     update_flag = True

@@ -51,18 +51,35 @@ def main(read_mode, sets, alpha, tol):
     xtrain, ytrain, xtest, ytest = sets
 
     n_inputs = len(xtrain[0])
+    n_outputs = len(ytrain[0])
 
-    adal_nn = Adaline(n_inputs, alpha, tol)
+    adal_nn = Adaline(n_inputs, n_outputs, alpha, tol)
 
     adal_nn.train(xtrain, ytrain)
     ypred = adal_nn.predict(xtest)
 
+    headers = []
+    for i in range(n_inputs):
+        headers.append("x"+str(i+1))
+    for i in range(n_outputs):
+        headers.append("t"+str(i+1))
+    for i in range(n_outputs):
+        headers.append("y"+str(i+1))
+
     results = []
-    headers = ["x1", "x2", "t (target)", "y (predicted)"]
     for i in range(len(ytest)):
-        results.append([str(xtest[i][0]), str(xtest[i][1]), str(ytest[i][0]), str(ypred[i][0])])
+        res = []
+        for j in range(n_inputs):
+            res.append(str(xtest[i][j]))
+        for j in range(n_outputs):
+            res.append(str(ytest[i][j]))
+        for j in range(n_outputs):
+            res.append(str(ypred[i][j]))
+        results.append(res)
 
     print(tabulate(results, headers=headers, tablefmt="pretty"))
+
+    print("MSE Loss:", adal_nn.error(ytest, ypred, metric='mse'))
 
 
 
