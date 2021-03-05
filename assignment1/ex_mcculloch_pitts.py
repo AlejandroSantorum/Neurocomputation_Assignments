@@ -16,6 +16,8 @@
 
 
 import sys
+from tabulate import tabulate
+
 from neuro_clfs.NeuralNetwork import NeuralNetwork
 from neuro_clfs.Layer import Layer
 from neuro_clfs.Neuron import Neuron
@@ -34,13 +36,14 @@ def build_nn_ex1():
     input_layer.add(x1)
     input_layer.add(x2)
     input_layer.add(x3)
-    h1 = Neuron(Neuron.Type.McCulloch, threshold=2, 1, 0)
-    h2 = Neuron(Neuron.Type.McCulloch, threshold=2, 1, 0)
-    h3 = Neuron(Neuron.Type.McCulloch, threshold=2, 1, 0)
+    # threshold = 2, active_output = 1, inactive_output = 0
+    h1 = Neuron(Neuron.Type.McCulloch, 2, 1, 0)
+    h2 = Neuron(Neuron.Type.McCulloch, 2, 1, 0)
+    h3 = Neuron(Neuron.Type.McCulloch, 2, 1, 0)
     hidden_layer.add(h1)
     hidden_layer.add(h2)
     hidden_layer.add(h3)
-    o1 = Neuron(Neuron.Type.McCulloch, threshold=1, 1, 0)
+    o1 = Neuron(Neuron.Type.McCulloch, 1, 1, 0)
     output_layer.add(o1)
 
     # a12
@@ -68,6 +71,47 @@ def build_nn_ex1():
 
 
 
+def run_ex_mccPitts(nn, file_lines):
+    headers = ['x1', 'x2', 'x3', 'a12', 'a13', 'a23', 'y']
+
+    results = []
+    for line in file_lines:
+        values = line.split()
+
+        for (i, neuron) in enumerate(nn.layers[0].neurons):
+            neuron.initialise(int(values[i]))
+
+        nn.trigger()
+        nn.propagate()
+
+        res = []
+        for layer in nn.layers:
+            for neuron in layer.neurons:
+                res.append(str(neuron.f_x))
+        results.append(res)
+
+    # We add two 'dirty' inputs in order to see the output of the
+    # McCulloch-Pitts network of the two last input values.
+    # Remember that this network needs two timesteps to generate
+    # an output given an input.
+    for j in range(2):
+        for (i, neuron) in enumerate(nn.layers[0].neurons):
+            neuron.initialise(0)
+
+        nn.trigger()
+        nn.propagate()
+
+        res = []
+        for layer in nn.layers:
+            for neuron in layer.neurons:
+                res.append(str(neuron.f_x))
+        results.append(res)
+
+    print(tabulate(results, headers=headers, tablefmt='pretty'))
+
+
+
+
 if __name__ == "__main__":
 
     # Reading data file
@@ -80,28 +124,12 @@ if __name__ == "__main__":
         exit()
 
     nn = build_nn_ex1()
-
-    print('x1  x2  x3  a12  a13  a23  y')
-    for line in file_lines:
-        values = line.split()
-
-        i = 0
-        for neuron in nn.layers[0].neurons:
-            neuron.initialise(int(values[i]))
-            i += 1
-
-        nn.trigger()
-        nn.propagate()
-
-        for layer in nn.layers:
-            for neuron in layer.neurons:
-                print(neuron.f_x, "  ", end='')
-        print("")
+    run_ex_mccPitts(nn, file_lines)
 
 ## TODO:
-#   1) Pretty printer
-#   2) Hacer las preguntas
-#   3) Cabeceras de ficheros, funciones y un par de comentarios (pydoc)
+#   1) Pretty printer -> done
+#   2) Hacer las preguntas -> done
+#   3) Cabeceras de ficheros, funciones y un par de comentarios (pydoc) -> TODO
 
 ## Preguntas:
 #   1) ¿Hay que mostrar el estado de la capa oculta/salida despues de que se acaben los ejemplos? -> Sí, poniendo entradas "basura"
