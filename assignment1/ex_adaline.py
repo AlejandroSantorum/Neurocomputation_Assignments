@@ -20,7 +20,7 @@ from tabulate import tabulate
 
 DEFAULT_ALPHA = 0.1
 DEFAULT_TOL = 0.001
-# ex_adaline.py read_mode file1 [file2] alpha tol
+# ex_adaline.py read_mode file1 [file2/percentage] alpha tol
 def read_input_params():
     # Reading train/test sets depending on given read mode
     read_mode, sets = parse_read_mode()
@@ -47,7 +47,7 @@ def read_input_params():
     return read_mode, sets, alpha, tol
 
 
-def main(read_mode, sets, alpha, tol):
+def main(sets, alpha, tol):
     xtrain, ytrain, xtest, ytest = sets
 
     n_inputs = len(xtrain[0])
@@ -85,4 +85,4 @@ def main(read_mode, sets, alpha, tol):
 
 if __name__ == '__main__':
     read_mode, sets, alpha, tol = read_input_params()
-    main(read_mode, sets, alpha, tol)
+    main(sets, alpha, tol)
