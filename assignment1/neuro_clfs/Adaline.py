@@ -10,6 +10,7 @@ class Adaline(NNClassifier):
         self.alpha = alpha
         self.tol = tol
         self.verbose = verbose
+        self.epoch_errors = []
 
         # building neural network with given data
         self.nn = NeuralNetwork()
@@ -76,6 +77,8 @@ class Adaline(NNClassifier):
                 # updates[-1] += update_value
 
             max_update = np.amax(np.absolute(updates))
+
+            self.epoch_errors.append(self.error(ytrain, self.predict(xtrain), metric='mse'))
 
             if self.verbose:
                 n_epoch += 1

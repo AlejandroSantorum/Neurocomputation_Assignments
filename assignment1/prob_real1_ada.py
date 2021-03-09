@@ -15,6 +15,7 @@
 import sys
 import numpy as np
 from neuro_clfs.Adaline import Adaline
+import matplotlib.pyplot as plt
 from read_data_utils import parse_read_mode, read1
 from tabulate import tabulate
 
@@ -94,6 +95,11 @@ def exec_real1(alpha, tol, num_reps):
         mse_list.append(mse)
 
     mse_list = np.asarray(mse_list)
+    plt.title('Evolution of MSE through the rounds')
+    plt.ylabel('MSE')
+    plt.xlabel('Epoch')
+    plt.plot(range(len(ada_nn.epoch_errors)), ada_nn.epoch_errors)
+    plt.savefig('MSE_ada.png')
     return round(mse_list.mean(),5), round(mse_list.std(),3)
 
 
