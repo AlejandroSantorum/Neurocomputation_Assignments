@@ -39,22 +39,22 @@ def read_input_params():
     # reading input params alpha and/or threshold (if specified)
     for (idx, parameter) in enumerate(sys.argv[1:]):
         if parameter == '-a':
-            alpha = sys.argv[idx+2]
+            alpha = float(sys.argv[idx+2])
             if alpha <= 0 or alpha > 1:
                 print("Error: alpha must be in (0, 1]")
                 exit()
         if parameter == '-th':
-            threshold = sys.argv[idx+2]
+            threshold = float(sys.argv[idx+2])
             if threshold <= 0:
                 print("Error: threshold must be positive")
                 exit()
         if parameter == '-nreps':
-            num_reps = sys.argv[idx+2]
+            num_reps = int(sys.argv[idx+2])
             if num_reps <= 0:
                 print("Error: num_reps must be at least one")
                 exit()
         if parameter == '-mep':
-            max_epoch = sys.argv[idx+2]
+            max_epoch = int(sys.argv[idx+2])
             if max_epoch <= 0:
                 print("Error: max_epoch must be at least one")
                 exit()
@@ -107,6 +107,7 @@ def exec_real1(alpha, threshold, num_reps, max_epoch):
     plt.xlabel('Epoch')
     plt.plot(range(len(perc_nn.epoch_errors)), perc_nn.epoch_errors)
     plt.savefig('MSE_perc.png')
+    #plt.show()
     return round(mse_list.mean(),5), round(mse_list.std(),3)
 
 
@@ -120,4 +121,3 @@ if __name__ == '__main__':
         alpha, threshold, num_reps, max_epoch = read_input_params()
         mse, std = exec_real1(alpha, threshold, num_reps, max_epoch)
         print("Mean Squared Error:", mse, "+-", std)
-
