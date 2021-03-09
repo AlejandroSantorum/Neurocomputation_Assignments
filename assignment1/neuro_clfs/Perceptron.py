@@ -10,6 +10,7 @@ class Perceptron(NNClassifier):
         self.alpha = alpha
         self.verbose = verbose
         self.max_epoch = max_epoch
+        self.epoch_errors = []
 
         # building neural network with given data
         self.nn = NeuralNetwork()
@@ -83,6 +84,7 @@ class Perceptron(NNClassifier):
                 # checking if any former weight is different than current weight
                 if self.nn.any_weight_update():
                     update_flag = True
+        self.epoch_errors.append(self.error(ytrain, self.predict(xtrain), metric='mse'))
 
 
     def predict(self, xtest):

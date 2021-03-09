@@ -14,6 +14,7 @@
 
 import sys
 import numpy as np
+import matplotlib.pyplot as plt
 from neuro_clfs.Perceptron import Perceptron
 from read_data_utils import parse_read_mode, read1
 from tabulate import tabulate
@@ -101,6 +102,11 @@ def exec_real1(alpha, threshold, num_reps, max_epoch):
         mse_list.append(mse)
 
     mse_list = np.asarray(mse_list)
+    plt.title('Evolution of MSE through the rounds')
+    plt.ylabel('MSE')
+    plt.xlabel('Epoch')
+    plt.plot(range(len(perc_nn.epoch_errors)), perc_nn.epoch_errors)
+    plt.savefig('MSE_perc.png')
     return round(mse_list.mean(),5), round(mse_list.std(),3)
 
 
