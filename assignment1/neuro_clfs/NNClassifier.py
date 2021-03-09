@@ -35,4 +35,5 @@ class NNClassifier:
                 for i in range(n_test):
                     S[j] += (ytrue[i][j] - ypred[i][j])**2
             S = np.asarray(S)
-            return (1/n_test)*S.mean()
+            return (1/n_test)*np.sum(S)
+            # return (1/n_test)*S.mean()

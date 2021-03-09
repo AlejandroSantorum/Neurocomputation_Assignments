@@ -22,8 +22,8 @@ from tabulate import tabulate
 
 FILE_PATH = "test_files/problema_real1.txt"
 
-DEFAULT_ALPHA = 0.5
-DEFAULT_TOL = 0.001
+DEFAULT_ALPHA = 0.01
+DEFAULT_TOL = 0.05
 DEFAULT_NREPS = 10
 DEFAULT_PERCENTAGE = 0.75
 

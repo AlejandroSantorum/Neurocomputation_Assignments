@@ -5,10 +5,11 @@ from .Neuron import Neuron
 
 class Perceptron(NNClassifier):
 
-    def __init__(self, n_inputs, n_outputs, threshold=0.1, alpha=1.0, verbose=False):
+    def __init__(self, n_inputs, n_outputs, threshold=0.1, alpha=1.0, verbose=False, max_epoch=20):
         self.threshold = threshold
         self.alpha = alpha
         self.verbose = verbose
+        self.max_epoch = max_epoch
 
         # building neural network with given data
         self.nn = NeuralNetwork()
@@ -39,11 +40,11 @@ class Perceptron(NNClassifier):
         # training loop: update_flag is True if any nn weight is updated
         update_flag = True
         n_epoch = 0
-        while update_flag:
+        while update_flag and n_epoch < self.max_epoch:
             # setting flag to False before every epoch
             update_flag = False
+            n_epoch += 1
             if self.verbose:
-                n_epoch += 1
                 print("Epoch", n_epoch)
 
             # an epoch trains over all examples

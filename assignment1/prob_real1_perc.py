@@ -26,12 +26,14 @@ DEFAULT_ALPHA = 1.0
 DEFAULT_TH = 0.2
 DEFAULT_NREPS = 10
 DEFAULT_PERCENTAGE = 0.75
+DEFAULT_EPOCH = 20
 
-# prob_real1_perc.py [-hyper] [-a alpha] [-th threshold] [-nreps num_reps]
+# prob_real1_perc.py [-hyper] [-a alpha] [-th threshold] [-nreps num_reps] [-mep max_epoch]
 def read_input_params():
     alpha = DEFAULT_ALPHA
     threshold = DEFAULT_TH
     num_reps = DEFAULT_NREPS
+    max_epoch = DEFAULT_EPOCH
 
     # reading input params alpha and/or threshold (if specified)
     for (idx, parameter) in enumerate(sys.argv[1:]):
@@ -50,8 +52,13 @@ def read_input_params():
             if num_reps <= 0:
                 print("Error: num_reps must be at least one")
                 exit()
+        if parameter == '-mep':
+            max_epoch = sys.argv[idx+2]
+            if max_epoch <= 0:
+                print("Error: max_epoch must be at least one")
+                exit()
 
-    return alpha, threshold, num_reps
+    return alpha, threshold, num_reps, max_epoch
 
 
 
@@ -68,7 +75,7 @@ def val_hyperparams():
     for th in THS:
         L = [str(th)]
         for alpha in ALPHAS:
-            mse, std = exec_real1(alpha, th, DEFAULT_NREPS)
+            mse, std = exec_real1(alpha, th, DEFAULT_NREPS, DEFAULT_EPOCH)
             L.append(str(mse)+' +- '+str(std))
             print("Alpha:", alpha, "Threshold:", th, "---> mse:", mse)
         L_RES.append(L)
@@ -76,7 +83,7 @@ def val_hyperparams():
 
 
 
-def exec_real1(alpha, threshold, num_reps):
+def exec_real1(alpha, threshold, num_reps, max_epoch):
     mse_list = []
     for i in range(num_reps):
         # reading training and test sets
@@ -86,7 +93,7 @@ def exec_real1(alpha, threshold, num_reps):
         n_inputs = len(xtrain[0])
         n_outputs = len(ytrain[0])
 
-        perc_nn = Perceptron(n_inputs, n_outputs, threshold=threshold, alpha=alpha)
+        perc_nn = Perceptron(n_inputs, n_outputs, threshold=threshold, alpha=alpha, verbose=False, max_epoch=max_epoch)
 
         perc_nn.train(xtrain, ytrain)
         ypred = perc_nn.predict(xtest)
@@ -104,7 +111,7 @@ if __name__ == '__main__':
         val_hyperparams()
     # executing with specified parameters
     else:
-        alpha, threshold, num_reps = read_input_params()
-        mse, std = exec_real1(alpha, threshold, num_reps)
+        alpha, threshold, num_reps, max_epoch = read_input_params()
+        mse, std = exec_real1(alpha, threshold, num_reps, max_epoch)
         print("Mean Squared Error:", mse, "+-", std)
 

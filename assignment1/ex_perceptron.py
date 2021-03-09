@@ -20,6 +20,7 @@ from tabulate import tabulate
 
 DEFAULT_ALPHA = 1.0
 DEFAULT_TH = 0.0
+DEFAULT_EPOCH = 20
 # ex_perceptron.py read_mode file1 [file2/percentage] alpha threshold
 def read_input_params():
     # Reading train/test sets depending on given read mode
@@ -41,22 +42,25 @@ def read_input_params():
         else:
             threshold = DEFAULT_TH
 
+    # TODO: get max_epoch as parameter
+
     else: # default value
         alpha = DEFAULT_ALPHA
         threshold = DEFAULT_TH
+        max_epoch = DEFAULT_EPOCH
 
-    return read_mode, sets, alpha, threshold
+    return read_mode, sets, alpha, threshold, max_epoch
 
 
 
 
-def main(sets, alpha, threshold):
+def main(sets, alpha, threshold, max_epoch):
     xtrain, ytrain, xtest, ytest = sets
 
     n_inputs = len(xtrain[0])
     n_outputs = len(ytrain[0])
 
-    perc_nn = Perceptron(n_inputs, n_outputs, threshold, alpha)
+    perc_nn = Perceptron(n_inputs, n_outputs, threshold, alpha, False, max_epoch)
 
     perc_nn.train(xtrain, ytrain)
     ypred = perc_nn.predict(xtest)
@@ -71,5 +75,5 @@ def main(sets, alpha, threshold):
 
 
 if __name__ == '__main__':
-    read_mode, sets, alpha, threshold = read_input_params()
-    main(sets, alpha, threshold)
+    read_mode, sets, alpha, threshold, max_epoch = read_input_params()
+    main(sets, alpha, threshold, max_epoch)
