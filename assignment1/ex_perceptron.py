@@ -72,6 +72,22 @@ def main(sets, alpha, threshold, max_epoch):
 
     print(tabulate(results, headers=headers, tablefmt="pretty"))
 
+    print("MSE Loss:", perc_nn.error(ytest, ypred, metric='mse'))
+
+    weight_list = []
+    input_layer = perc_nn.nn.layers[0]
+    for neuron in input_layer.neurons:
+        for conn in neuron.connections:
+            weight_list.append(conn.weight)
+
+    b = weight_list[0]
+    weight_list = weight_list[1:]
+    print("Decision boundary: ", end='')
+    for (i, w) in enumerate(weight_list):
+        print(str(round(w, 2)) + "·X"+str(i+1) + " + ", end='')
+    print(str(round(b, 2)) + " = 0")
+
+
 
 
 if __name__ == '__main__':
