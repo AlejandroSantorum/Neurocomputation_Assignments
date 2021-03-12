@@ -71,17 +71,6 @@ class Perceptron(NNClassifier):
                         for neuron_in in input_layer.neurons:
                             neuron_in.connections[j].update_weight(0) # term = 0
 
-                # if output_layer.neurons[0].f_x != ytrain[i][0]:
-                #     # updating w_i
-                #     for (k, neuron) in enumerate(input_layer.neurons[1:]):
-                #         neuron.connections[0].update_weight(self.alpha*ytrain[i][0]*xtrain[i][k])
-                #     # updating b
-                #     input_layer.neurons[0].connections[0].update_weight(self.alpha*ytrain[i][0])
-                # else:
-                #     for neuron in input_layer.neurons:
-                #         neuron.connections[0].update_weight(0) # term = 0
-
-                # checking if any former weight is different than current weight
                 if self.nn.any_weight_update():
                     update_flag = True
             self.epoch_errors.append(self.error(ytrain, self.predict(xtrain), metric='mse'))

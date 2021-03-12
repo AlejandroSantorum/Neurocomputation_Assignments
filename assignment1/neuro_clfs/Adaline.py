@@ -65,17 +65,6 @@ class Adaline(NNClassifier):
                     input_layer.neurons[0].connections[j].update_weight(update_value)
                     updates[j][-1] += update_value
 
-                # y_in = output_layer.neurons[0].value
-                # # updating w_i
-                # for (j, neuron) in enumerate(input_layer.neurons[1:]):
-                #     update_value = self.alpha*(ytrain[i][0] - y_in)*xtrain[i][j]
-                #     neuron.connections[0].update_weight(update_value)
-                #     updates[j] += update_value
-                # # updating b
-                # update_value = self.alpha*(ytrain[i][0] - y_in)
-                # input_layer.neurons[0].connections[0].update_weight(update_value)
-                # updates[-1] += update_value
-
             max_update = np.amax(np.absolute(updates))
 
             self.epoch_errors.append(self.error(ytrain, self.predict(xtrain), metric='mse'))
