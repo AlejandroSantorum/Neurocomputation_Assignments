@@ -13,6 +13,7 @@
 '''
 
 import sys
+import matplotlib.pyplot as plt
 from neuro_clfs.Adaline import Adaline
 from read_data_utils import parse_read_mode
 from tabulate import tabulate
@@ -20,29 +21,26 @@ from tabulate import tabulate
 
 DEFAULT_ALPHA = 0.1
 DEFAULT_TOL = 0.001
-# ex_adaline.py read_mode file1 [file2/percentage] alpha tol
+# ex_adaline.py read_mode file1 [file2/percentage] [-a alpha] [-tol tolerance]
 def read_input_params():
+    alpha = DEFAULT_ALPHA
+    tol = DEFAULT_TOL
+
     # Reading train/test sets depending on given read mode
     read_mode, sets = parse_read_mode()
 
-    # Reading learning rate alpha and perceptron tolerance (if specified)
-    if (read_mode == 1 or read_mode == 3) and len(sys.argv) >= 5:
-        alpha = float(sys.argv[4])
-        if alpha >= 1:
-            print("Warning: alpha might be too large to converge")
-        if len(sys.argv) == 6:
-            tol = float(sys.argv[5])
-
-    elif read_mode == 2 and len(sys.argv) >= 4:
-        alpha = float(sys.argv[3])
-        if len(sys.argv) == 5:
-            tol = float(sys.argv[4])
-        else:
-            tol = DEFAULT_TOL
-
-    else: # default value
-        alpha = DEFAULT_ALPHA
-        tol = DEFAULT_TOL
+    # reading input params alpha and/or tolerance (if specified)
+    for (idx, parameter) in enumerate(sys.argv[1:]):
+        if parameter == '-a':
+            alpha = float(sys.argv[idx+2])
+            if alpha <= 0 or alpha > 1:
+                print("Error: alpha must be in (0, 1]")
+                exit()
+        if parameter == '-tol':
+            tol = float(sys.argv[idx+2])
+            if tol <= 0:
+                print("Error: tolerance must be positive")
+                exit()
 
     return read_mode, sets, alpha, tol
 
@@ -93,6 +91,12 @@ def main(sets, alpha, tol):
     for (i, w) in enumerate(weight_list):
         print(str(round(w, 2)) + "·X"+str(i+1) + " + ", end='')
     print(str(round(b, 2)) + " = 0")
+
+    plt.title('[Adaline] Evolution of MSE per epoch')
+    plt.ylabel('MSE')
+    plt.xlabel('Epoch')
+    plt.plot(range(len(adal_nn.epoch_errors)), adal_nn.epoch_errors)
+    plt.savefig('imgs/ex_adal_mse.png')
 
 
 

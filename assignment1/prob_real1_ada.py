@@ -4,7 +4,7 @@
         · Sergio Galán Martín - sergio.galanm@estudiante.uam.es
 
     File: prob_real1_ada.py
-    Date: Mar. 03, 2021
+    Date: Mar. 12, 2021
     Project: Assignment 1 - Neurocomputation [EPS-UAM]
 
     Description: This file contains the script for real problem 1 adaline exercise
@@ -24,7 +24,7 @@ from tabulate import tabulate
 FILE_PATH = "test_files/problema_real1.txt"
 
 DEFAULT_ALPHA = 0.01
-DEFAULT_TOL = 0.05
+DEFAULT_TOL = 0.01
 DEFAULT_NREPS = 10
 DEFAULT_PERCENTAGE = 0.75
 
@@ -37,17 +37,17 @@ def read_input_params():
     # reading input params alpha and/or tolerance (if specified)
     for (idx, parameter) in enumerate(sys.argv[1:]):
         if parameter == '-a':
-            alpha = sys.argv[idx+2]
+            alpha = float(sys.argv[idx+2])
             if alpha <= 0 or alpha > 1:
                 print("Error: alpha must be in (0, 1]")
                 exit()
         if parameter == '-tol':
-            tol = sys.argv[idx+2]
+            tol = float(sys.argv[idx+2])
             if tol <= 0:
                 print("Error: tolerance must be positive")
                 exit()
         if parameter == '-nreps':
-            num_reps = sys.argv[idx+2]
+            num_reps = int(sys.argv[idx+2])
             if num_reps <= 0:
                 print("Error: num_reps must be at least one")
                 exit()
@@ -57,28 +57,72 @@ def read_input_params():
 
 
 
-ALPHAS = [0.001, 0.005, 0.01, 0.05, 0.1]
-TOLS = [0.1, 0.05, 0.01, 0.005, 0.001]
+ALPHAS = [0.005, 0.01, 0.05, 0.1]
+TOLS = [0.001, 0.005, 0.01, 0.05]
 
-def val_hyperparams():
-    headers = ["Thresholds \ Alphas"]
-    for alpha in ALPHAS:
-        headers.append(str(alpha))
-
+def val_hyperparams(alphas=ALPHAS, tols=TOLS):
     L_RES = []
-    for tol in TOLS:
-        L = [str(tol)]
-        for alpha in ALPHAS:
-            mse, std = exec_real1(alpha, tol, DEFAULT_NREPS)
+
+    # If alpha is fixed
+    if len(alphas) == 1:
+        mse_list = []
+        L = [str(alphas[0])]
+        headers = ['Alpha \ Tols']
+        for tol in tols:
+            headers.append(str(tol))
+        for tol in tols:
+            mse, std, _, _ = exec_real1(alphas[0], tol, DEFAULT_NREPS)
+            mse_list.append(mse)
             L.append(str(mse)+' +- '+str(std))
-            print("Alpha:", alpha, "Tolerance:", tol, "---> mse:", mse)
+            print("Alpha:", alphas[0], "Tol:", tol, "---> mse:", mse)
         L_RES.append(L)
+        # Plotting
+        plt.title('Evolution of MSE varying tolerance (alpha='+str(alphas[0])+')')
+        plt.ylabel('MSE')
+        plt.xlabel('Tolerance')
+        plt.plot(tols, mse_list)
+        plt.savefig('imgs/MSE_adal_varTol.png')
+
+    # If tolerance is fixed
+    elif len(tols) == 1:
+        mse_list = []
+        L = [str(tols[0])]
+        headers = ["Tols \ Alphas"]
+        for a in alphas:
+            headers.append(str(a))
+        for a in alphas:
+            mse, std, _, _ = exec_real1(a, tols[0], DEFAULT_NREPS)
+            mse_list.append(mse)
+            L.append(str(mse)+' +- '+str(std))
+            print("Alpha:", a, "Tol:", tols[0], "---> mse:", mse)
+        L_RES.append(L)
+        # Plotting
+        plt.title('Evolution of MSE varying alpha (tol='+str(tols[0])+')')
+        plt.ylabel('MSE')
+        plt.xlabel('Alpha')
+        plt.plot(alphas, mse_list)
+        plt.savefig('imgs/MSE_adal_varAlpha.png')
+
+    # None is fixed
+    else:
+        headers = ["Tols \ Alphas"]
+        for alpha in alphas:
+            headers.append(str(alpha))
+        for tol in tols:
+            L = [str(tol)]
+            for alpha in alphas:
+                mse, std, _, _ = exec_real1(alpha, tol, DEFAULT_NREPS)
+                L.append(str(mse)+' +- '+str(std))
+                print("Alpha:", alpha, "Tolerance:", tol, "---> mse:", mse)
+            L_RES.append(L)
+
     print(tabulate(L_RES, headers=headers, tablefmt="grid"))
 
 
 
 def exec_real1(alpha, tol, num_reps):
     mse_list = []
+    acc_list = []
     for i in range(num_reps):
         # reading training and test sets
         sets = read1(FILE_PATH, DEFAULT_PERCENTAGE)
@@ -92,24 +136,37 @@ def exec_real1(alpha, tol, num_reps):
         ada_nn.train(xtrain, ytrain)
         ypred = ada_nn.predict(xtest)
         mse = ada_nn.error(ytest, ypred, metric='mse')
+        acc = 1-ada_nn.error(ytest, ypred, metric='acc')
         mse_list.append(mse)
+        acc_list.append(acc)
 
     mse_list = np.asarray(mse_list)
-    plt.title('Evolution of MSE through the rounds')
-    plt.ylabel('MSE')
-    plt.xlabel('Epoch')
-    plt.plot(range(len(ada_nn.epoch_errors)), ada_nn.epoch_errors)
-    plt.savefig('MSE_ada.png')
-    return round(mse_list.mean(),5), round(mse_list.std(),3)
+    acc_list = np.asarray(acc_list)
+    return round(mse_list.mean(),5), round(mse_list.std(),3), round(acc_list.mean(),3), round(acc_list.std(),2)
 
 
 
 if __name__ == '__main__':
     # hyperparameter validation
-    if '-hyper' in sys.argv:
+    if '-hyper' in sys.argv and '-a' not in sys.argv and '-tol' not in sys.argv:
         val_hyperparams()
+    # hyperparameter validation fixing alpha
+    elif '-hyper' in sys.argv and '-a' in sys.argv and '-tol' not in sys.argv:
+        idx = sys.argv.index('-a')
+        alpha = float(sys.argv[idx+1])
+        val_hyperparams(alphas=[alpha])
+    # hyperparameter validation fixing threshold
+    elif '-hyper' in sys.argv and '-a' not in sys.argv and '-tol' in sys.argv:
+        idx = sys.argv.index('-tol')
+        tol = float(sys.argv[idx+1])
+        val_hyperparams(tols=[tol])
     # executing with specified parameters
     else:
         alpha, tol, num_reps = read_input_params()
-        mse, std = exec_real1(alpha, tol, num_reps)
-        print("Mean Squared Error:", mse, "+-", std)
+        print("Executing Adaline algorithm with parameters:")
+        print("\tAlpha =", alpha)
+        print("\tTolerance =", tol)
+        print("\tNumber of repetitions =", num_reps)
+        mse, std, acc, std2 = exec_real1(alpha, tol, num_reps)
+        print("===> Mean Squared Error:", mse, "+-", std)
+        print("===> Mean Accuracy:", acc, "+-", std2)

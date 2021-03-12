@@ -23,7 +23,12 @@ class NNClassifier:
     def error(self, ytrue, ypred, metric='acc'):
         # Accuracy
         if metric == 'acc':
-            hit_rate = sum(ytrue == ypred)/len(ypred)
+            n_test = len(ytrue)
+            hit_rate = 0
+            for i in range(n_test):
+                if np.array_equal(ytrue[i], ypred[i]):
+                    hit_rate += 1
+            hit_rate /= n_test
             # miss rate is the complement of hit rate
             return 1-hit_rate
         # Mean Squared Error
@@ -36,4 +41,3 @@ class NNClassifier:
                     S[j] += (ytrue[i][j] - ypred[i][j])**2
             S = np.asarray(S)
             return (1/n_test)*np.sum(S)
-            # return (1/n_test)*S.mean()

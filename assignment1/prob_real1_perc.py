@@ -4,7 +4,7 @@
         · Sergio Galán Martín - sergio.galanm@estudiante.uam.es
 
     File: prob_real1_perc.py
-    Date: Mar. 03, 2021
+    Date: Mar. 12, 2021
     Project: Assignment 1 - Neurocomputation [EPS-UAM]
 
     Description: This file contains the script for real problem 1 perceptron exercise
@@ -23,8 +23,8 @@ from tabulate import tabulate
 
 FILE_PATH = "test_files/problema_real1.txt"
 
-DEFAULT_ALPHA = 1.0
-DEFAULT_TH = 0.2
+DEFAULT_ALPHA = 0.1
+DEFAULT_TH = 0.5
 DEFAULT_NREPS = 10
 DEFAULT_PERCENTAGE = 0.75
 DEFAULT_EPOCH = 20
@@ -64,28 +64,72 @@ def read_input_params():
 
 
 
-ALPHAS = [0.001, 0.005, 0.01, 0.05, 0.1, 0.5, 1]
-THS = [0.01, 0.05, 0.1, 0.3, 0.5]
+ALPHAS = [0.01, 0.05, 0.1, 0.5, 1]
+THS = [0.1, 0.3, 0.5, 1]
 
-def val_hyperparams():
-    headers = ["Thresholds \ Alphas"]
-    for alpha in ALPHAS:
-        headers.append(str(alpha))
-
+def val_hyperparams(alphas=ALPHAS, ths=THS):
     L_RES = []
-    for th in THS:
-        L = [str(th)]
-        for alpha in ALPHAS:
-            mse, std = exec_real1(alpha, th, DEFAULT_NREPS, DEFAULT_EPOCH)
+
+    # If alpha is fixed
+    if len(alphas) == 1:
+        mse_list = []
+        L = [str(alphas[0])]
+        headers = ['Alpha \ Thresholds']
+        for th in ths:
+            headers.append(str(th))
+        for th in ths:
+            mse, std, _, _ = exec_real1(alphas[0], th, DEFAULT_NREPS, DEFAULT_EPOCH)
+            mse_list.append(mse)
             L.append(str(mse)+' +- '+str(std))
-            print("Alpha:", alpha, "Threshold:", th, "---> mse:", mse)
+            print("Alpha:", alphas[0], "Threshold:", th, "---> mse:", mse)
         L_RES.append(L)
+        # Plotting
+        plt.title('Evolution of MSE varying threshold (alpha='+str(alphas[0])+')')
+        plt.ylabel('MSE')
+        plt.xlabel('Threshold')
+        plt.plot(ths, mse_list)
+        plt.savefig('imgs/MSE_perc_varThs.png')
+
+    # If threshold is fixed
+    elif len(ths) == 1:
+        mse_list = []
+        L = [str(ths[0])]
+        headers = ['Threshold \ Alphas']
+        for alpha in alphas:
+            headers.append(str(alpha))
+        for a in alphas:
+            mse, std, _, _ = exec_real1(a, ths[0], DEFAULT_NREPS, DEFAULT_EPOCH)
+            mse_list.append(mse)
+            L.append(str(mse)+' +- '+str(std))
+            print("Alpha:", a, "Threshold:", ths[0], "---> mse:", mse)
+        L_RES.append(L)
+        # Plotting
+        plt.title('Evolution of MSE varying alpha (thresh='+str(ths[0])+')')
+        plt.ylabel('MSE')
+        plt.xlabel('Alpha')
+        plt.plot(alphas, mse_list)
+        plt.savefig('imgs/MSE_perc_varAlpha.png')
+
+    # None is fixed
+    else:
+        headers = ["Thresholds \ Alphas"]
+        for alpha in alphas:
+            headers.append(str(alpha))
+        for th in ths:
+            L = [str(th)]
+            for alpha in alphas:
+                mse, std, _, _ = exec_real1(alpha, th, DEFAULT_NREPS, DEFAULT_EPOCH)
+                L.append(str(mse)+' +- '+str(std))
+                print("Alpha:", alpha, "Threshold:", th, "---> mse:", mse)
+            L_RES.append(L)
+
     print(tabulate(L_RES, headers=headers, tablefmt="grid"))
 
 
 
 def exec_real1(alpha, threshold, num_reps, max_epoch):
     mse_list = []
+    acc_list = []
     for i in range(num_reps):
         # reading training and test sets
         sets = read1(FILE_PATH, DEFAULT_PERCENTAGE)
@@ -99,25 +143,38 @@ def exec_real1(alpha, threshold, num_reps, max_epoch):
         perc_nn.train(xtrain, ytrain)
         ypred = perc_nn.predict(xtest)
         mse = perc_nn.error(ytest, ypred, metric='mse')
+        acc = 1-perc_nn.error(ytest, ypred, metric='acc')
         mse_list.append(mse)
+        acc_list.append(acc)
 
     mse_list = np.asarray(mse_list)
-    plt.title('Evolution of MSE through the rounds')
-    plt.ylabel('MSE')
-    plt.xlabel('Epoch')
-    plt.plot(range(len(perc_nn.epoch_errors)), perc_nn.epoch_errors)
-    plt.savefig('MSE_perc.png')
-    #plt.show()
-    return round(mse_list.mean(),5), round(mse_list.std(),3)
+    acc_list = np.asarray(acc_list)
+    return round(mse_list.mean(),5), round(mse_list.std(),3), round(acc_list.mean(),3), round(acc_list.std(),2)
 
 
 
 if __name__ == '__main__':
     # hyperparameter validation
-    if '-hyper' in sys.argv:
+    if '-hyper' in sys.argv and '-a' not in sys.argv and '-th' not in sys.argv:
         val_hyperparams()
+    # hyperparameter validation fixing alpha
+    elif '-hyper' in sys.argv and '-a' in sys.argv and '-th' not in sys.argv:
+        idx = sys.argv.index('-a')
+        alpha = float(sys.argv[idx+1])
+        val_hyperparams(alphas=[alpha])
+    # hyperparameter validation fixing threshold
+    elif '-hyper' in sys.argv and '-a' not in sys.argv and '-th' in sys.argv:
+        idx = sys.argv.index('-th')
+        th = float(sys.argv[idx+1])
+        val_hyperparams(ths=[th])
     # executing with specified parameters
     else:
         alpha, threshold, num_reps, max_epoch = read_input_params()
-        mse, std = exec_real1(alpha, threshold, num_reps, max_epoch)
-        print("Mean Squared Error:", mse, "+-", std)
+        print("Executing Perceptron algorithm with parameters:")
+        print("\tAlpha =", alpha)
+        print("\tThreshold =", threshold)
+        print("\tNumber of repetitions =", num_reps)
+        print("\tNumber of maximum epochs =", max_epoch)
+        mse, std, acc, std2 = exec_real1(alpha, threshold, num_reps, max_epoch)
+        print("===> Mean Squared Error:", mse, "+-", std)
+        print("===> Mean Accuracy:", acc, "+-", std2)

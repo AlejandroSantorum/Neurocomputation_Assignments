@@ -182,7 +182,7 @@ def read3(train_file, test_file):
                 s_aux.append(float(data_line[i]))
             for i in range(M,len(data_line)):
                 t_aux.append(float(data_line[i]))
-            s_train.append(s_aux)
-            t_train.append(t_aux)
+            s_test.append(s_aux)
+            t_test.append(t_aux)
 
     return s_train, t_train, s_test, t_test
