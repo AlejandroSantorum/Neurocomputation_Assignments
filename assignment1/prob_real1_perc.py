@@ -23,8 +23,8 @@ from tabulate import tabulate
 
 FILE_PATH = "test_files/problema_real1.txt"
 
-DEFAULT_ALPHA = 0.1
-DEFAULT_TH = 0.5
+DEFAULT_ALPHA = 0.5
+DEFAULT_TH = 0.0
 DEFAULT_NREPS = 10
 DEFAULT_PERCENTAGE = 0.75
 DEFAULT_EPOCH = 20
@@ -65,50 +65,77 @@ def read_input_params():
 
 
 ALPHAS = [0.01, 0.05, 0.1, 0.5, 1]
-THS = [0.1, 0.3, 0.5, 1]
+THS = [0, 0.25, 0.5, 1]
 
 def val_hyperparams(alphas=ALPHAS, ths=THS):
     L_RES = []
+    L_RES_ACC = []
 
     # If alpha is fixed
     if len(alphas) == 1:
         mse_list = []
-        L = [str(alphas[0])]
+        acc_list = []
+        L1 = [str(alphas[0])]
+        L2 = [str(alphas[0])]
         headers = ['Alpha \ Thresholds']
         for th in ths:
             headers.append(str(th))
         for th in ths:
-            mse, std, _, _ = exec_real1(alphas[0], th, DEFAULT_NREPS, DEFAULT_EPOCH)
+            mse, std, acc, std2 = exec_real1(alphas[0], th, DEFAULT_NREPS, DEFAULT_EPOCH)
             mse_list.append(mse)
-            L.append(str(mse)+' +- '+str(std))
-            print("Alpha:", alphas[0], "Threshold:", th, "---> mse:", mse)
-        L_RES.append(L)
+            acc_list.append(acc)
+            L1.append(str(mse)+' +- '+str(std))
+            L2.append(str(acc)+' +- '+str(std2))
+            print("Alpha:", alphas[0], "Threshold:", th, "---> mse:", mse, ", acc:", acc)
+        L_RES.append(L1)
+        L_RES_ACC.append(L2)
         # Plotting
-        plt.title('Evolution of MSE varying threshold (alpha='+str(alphas[0])+')')
-        plt.ylabel('MSE')
-        plt.xlabel('Threshold')
-        plt.plot(ths, mse_list)
-        plt.savefig('imgs/MSE_perc_varThs.png')
+        fig, axes = plt.subplots(nrows=1, ncols=2)
+        fig.set_figheight(5)
+        fig.set_figwidth(13)
+        fig.subplots_adjust(hspace=.5)
+        axes[0].set_title('Evolution of MSE varying threshold (alpha='+str(alphas[0])+')')
+        axes[1].set_title('Evolution of Accuracy varying threshold (alpha='+str(alphas[0])+')')
+        axes[0].set_ylabel('MSE')
+        axes[1].set_ylabel('Accuracy')
+        axes[0].set_xlabel('Threshold')
+        axes[1].set_xlabel('Threshold')
+        axes[0].plot(ths, mse_list)
+        axes[1].plot(ths, acc_list)
+        plt.savefig('imgs/MSE+Acc_perc_varThs.png')
 
     # If threshold is fixed
     elif len(ths) == 1:
         mse_list = []
-        L = [str(ths[0])]
+        acc_list = []
+        L1 = [str(ths[0])]
+        L2 = [str(ths[0])]
         headers = ['Threshold \ Alphas']
         for alpha in alphas:
             headers.append(str(alpha))
         for a in alphas:
-            mse, std, _, _ = exec_real1(a, ths[0], DEFAULT_NREPS, DEFAULT_EPOCH)
+            mse, std, acc, std2 = exec_real1(a, ths[0], DEFAULT_NREPS, DEFAULT_EPOCH)
             mse_list.append(mse)
-            L.append(str(mse)+' +- '+str(std))
-            print("Alpha:", a, "Threshold:", ths[0], "---> mse:", mse)
-        L_RES.append(L)
+            acc_list.append(acc)
+            L1.append(str(mse)+' +- '+str(std))
+            L2.append(str(acc)+' +- '+str(std2))
+            print("Alpha:", a, "Threshold:", ths[0], "---> mse:", mse, ", acc:", acc)
+        L_RES.append(L1)
+        L_RES_ACC.append(L2)
         # Plotting
-        plt.title('Evolution of MSE varying alpha (thresh='+str(ths[0])+')')
-        plt.ylabel('MSE')
-        plt.xlabel('Alpha')
-        plt.plot(alphas, mse_list)
-        plt.savefig('imgs/MSE_perc_varAlpha.png')
+        fig, axes = plt.subplots(nrows=1, ncols=2)
+        fig.set_figheight(5)
+        fig.set_figwidth(13)
+        fig.subplots_adjust(hspace=.5)
+        axes[0].set_title('Evolution of MSE varying alpha (thresh='+str(ths[0])+')')
+        axes[1].set_title('Evolution of Accuracy varying alpha (thresh='+str(ths[0])+')')
+        axes[0].set_ylabel('MSE')
+        axes[1].set_ylabel('Accuracy')
+        axes[0].set_xlabel('Alpha')
+        axes[1].set_xlabel('Alpha')
+        axes[0].plot(alphas, mse_list)
+        axes[1].plot(alphas, acc_list)
+        plt.savefig('imgs/MSE+Acc_perc_varAlpha.png')
 
     # None is fixed
     else:
@@ -116,14 +143,18 @@ def val_hyperparams(alphas=ALPHAS, ths=THS):
         for alpha in alphas:
             headers.append(str(alpha))
         for th in ths:
-            L = [str(th)]
+            L1 = [str(th)]
+            L2 = [str(th)]
             for alpha in alphas:
-                mse, std, _, _ = exec_real1(alpha, th, DEFAULT_NREPS, DEFAULT_EPOCH)
-                L.append(str(mse)+' +- '+str(std))
-                print("Alpha:", alpha, "Threshold:", th, "---> mse:", mse)
-            L_RES.append(L)
+                mse, std, acc, std2 = exec_real1(alpha, th, DEFAULT_NREPS, DEFAULT_EPOCH)
+                L1.append(str(mse)+' +- '+str(std))
+                L2.append(str(acc)+' +- '+str(std2))
+                print("Alpha:", alpha, "Threshold:", th, "---> mse:", mse, ", acc:", acc)
+            L_RES.append(L1)
+            L_RES_ACC.append(L2)
 
     print(tabulate(L_RES, headers=headers, tablefmt="grid"))
+    print(tabulate(L_RES_ACC, headers=headers, tablefmt="grid"))
 
 
 
