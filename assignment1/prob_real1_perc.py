@@ -45,8 +45,8 @@ def read_input_params():
                 exit()
         if parameter == '-th':
             threshold = float(sys.argv[idx+2])
-            if threshold <= 0:
-                print("Error: threshold must be positive")
+            if threshold < 0:
+                print("Error: threshold must be non-negative")
                 exit()
         if parameter == '-nreps':
             num_reps = int(sys.argv[idx+2])
