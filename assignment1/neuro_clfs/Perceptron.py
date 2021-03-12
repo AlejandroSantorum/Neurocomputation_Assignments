@@ -1,11 +1,41 @@
+'''
+
+    Authors:
+        · Alejandro Santorum Varela - alejandro.santorum@estudiante.uam.es
+        · Sergio Galán Martín - sergio.galanm@estudiante.uam.es
+
+    File: Perceptron.py
+    Date: Mar. 10, 2021
+    Project: Assignment 1 - Neurocomputation [EPS-UAM]
+
+    Description: This file contains the implementation of class Perceptron, whose
+        goal is to execute perceptron learning algorithm. It inherits NNClassifier class.
+
+'''
+
 from .NNClassifier import NNClassifier
 from .NeuralNetwork import NeuralNetwork
 from .Layer import Layer
 from .Neuron import Neuron
 
 class Perceptron(NNClassifier):
+    '''
+        Implementation of class Perceptron, whose goal is to execute perceptron
+        learning algorithm. It inherits NNClassifier class.
+    '''
 
     def __init__(self, n_inputs, n_outputs, threshold=0.1, alpha=1.0, verbose=False, max_epoch=20):
+        '''
+            Constructor of a new object 'Perceptron'.
+
+            :param n_inputs: Number of inputs of the neural network
+            :param n_outputs: Number of outputs of the neural network
+            :param alpha: (Optional) Learning parameter alpha. Default=0.1
+            :param threshold: (Optional) Threshold. The algorithm activation function depends on this threshold. Default=0.1
+            :param verbose: (Optional) If set to True, feedback of each epoch is printed.
+            :param max_epoch: (Optional) Maximum number of epochs. Default=20
+            :return: None
+        '''
         self.threshold = threshold
         self.alpha = alpha
         self.verbose = verbose
@@ -32,6 +62,11 @@ class Perceptron(NNClassifier):
 
 
     def train(self, xtrain, ytrain):
+        '''
+            Input parameters and return explained in parent class.
+
+            It trains the Perceptron object accordingly to perceptron algorithm.
+        '''
         n_train = len(xtrain)
 
         # getting input and output layers
@@ -77,6 +112,11 @@ class Perceptron(NNClassifier):
 
 
     def predict(self, xtest):
+        '''
+            Input parameters and return explained in parent class.
+
+            It predicts the network output accordingly its hyperparameters and fitting parameters.
+        '''
         n_test = len(xtest)
         input_layer = self.nn.layers[0]
 

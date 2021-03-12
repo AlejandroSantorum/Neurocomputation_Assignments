@@ -59,13 +59,33 @@ class Layer:
         return False
 
     def add(self, neuron):
+        '''
+            Add a neuron to the layer.
+
+            :param neuron: neuron object to insert in this layer.
+            :return: None.
+        '''
         self.neurons.append(neuron)
 
     def connectLayer(self, layer, weight_mode):
+        '''
+            Connects a given layer to the current layer.
+
+            :param layer: layer object to connect with this layer.
+            :param weight_mode: weight mode to initialise weights.
+            :return: None.
+        '''
         for neuron in layer.neurons:
             self.connectNeuron(neuron, weight_mode)
 
     def connectNeuron(self, neuron, weight_mode):
+        '''
+            Connects a given neuron to the current layer.
+
+            :param neuron: neuron object to connect with this layer.
+            :param weight_mode: weight mode to initialise weights.
+            :return: None.
+        '''
         if weight_mode is Layer.WeightMode.ZeroWeight:
             for orig_neuron in self.neurons:
                 orig_neuron.connect(neuron, 0)
@@ -75,10 +95,20 @@ class Layer:
                 orig_neuron.connect(neuron, random.uniform(-0.5, 0.5))
 
     def trigger(self):
+        '''
+            Triggers the current layer neurons
+
+            :return: None
+        '''
         for neuron in self.neurons:
             neuron.trigger()
 
     def propagate(self):
+        '''
+            Propagates the values of the current layer neurons
+
+            :return: None
+        '''
         for neuron in self.neurons:
             neuron.propagate()
 

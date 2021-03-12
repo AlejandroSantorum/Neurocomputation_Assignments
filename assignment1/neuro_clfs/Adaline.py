@@ -1,3 +1,18 @@
+'''
+
+    Authors:
+        · Alejandro Santorum Varela - alejandro.santorum@estudiante.uam.es
+        · Sergio Galán Martín - sergio.galanm@estudiante.uam.es
+
+    File: Adaline.py
+    Date: Mar. 10, 2021
+    Project: Assignment 1 - Neurocomputation [EPS-UAM]
+
+    Description: This file contains the implementation of class Adaline, whose
+        goal is to execute adaline learning algorithm. It inherits NNClassifier class.
+
+'''
+
 from .NNClassifier import NNClassifier
 from .NeuralNetwork import NeuralNetwork
 from .Layer import Layer
@@ -5,8 +20,22 @@ from .Neuron import Neuron
 import numpy as np
 
 class Adaline(NNClassifier):
+    '''
+        Implementation of class Adaline, whose goal is to execute adaline
+        learning algorithm. It inherits NNClassifier class.
+    '''
 
     def __init__(self, n_inputs, n_outputs, alpha=0.1, tol=0.01, verbose=False):
+        '''
+            Constructor of a new object 'Adaline'.
+
+            :param n_inputs: Number of inputs of the neural network
+            :param n_outputs: Number of outputs of the neural network
+            :param alpha: (Optional) Learning parameter alpha. Default=0.1
+            :param tol: (Optional) Tolerance. The algorithm stops when weights vary less than tolerance. Default=0.01
+            :param verbose: (Optional) If set to True, feedback of each epoch is printed.
+            :return: None
+        '''
         self.alpha = alpha
         self.tol = tol
         self.verbose = verbose
@@ -33,6 +62,11 @@ class Adaline(NNClassifier):
 
 
     def train(self, xtrain, ytrain):
+        '''
+            Input parameters and return explained in parent class.
+
+            It trains the Adaline object accordingly to adaline algorithm.
+        '''
         n_train = len(xtrain)
         n_outputs = len(ytrain[0])
 
@@ -78,6 +112,11 @@ class Adaline(NNClassifier):
 
 
     def predict(self, xtest):
+        '''
+            Input parameters and return explained in parent class.
+
+            It predicts the network output accordingly its hyperparameters and fitting parameters.
+        '''
         n_test = len(xtest)
         input_layer = self.nn.layers[0]
 

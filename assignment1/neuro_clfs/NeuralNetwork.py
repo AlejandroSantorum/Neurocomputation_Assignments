@@ -51,13 +51,29 @@ class NeuralNetwork:
         return False
 
     def add(self, layer):
+        '''
+            Adds a layer to the network
+
+            :param layer: layer object to be added
+            :return: None
+        '''
         self.layers.append(layer)
 
     def trigger(self):
+        '''
+            Triggers the net's layers
+
+            :return: None
+        '''
         for layer in self.layers:
             layer.trigger()
 
     def propagate(self):
+        '''
+            Propagates the values of all the net's neurons
+
+            :return: None
+        '''
         for layer in self.layers:
             layer.propagate()
 
