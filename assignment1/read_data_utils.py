@@ -29,6 +29,10 @@ def _print_help():
 
 
 def parse_read_mode():
+    '''
+        Reads input arguments
+    '''
+
     nparams = len(sys.argv)
 
     if nparams < 2:
@@ -61,6 +65,19 @@ def parse_read_mode():
 
 
 def read1(data_file, perc):
+    '''
+        Read Mode 1
+
+        :param data_file: file to read the data.
+        :param perc: percentage of data destined to train set. 1-perc is put into test set.
+        :Observation: Data is shuffled before splitting.
+
+        :return:
+            s_train: train data matrix
+            t_train: train target matrix
+            s_test: test data matrix
+            t_test: test target matrix
+    '''
 
     with open(data_file, 'r') as f:
         # reading number of features (M) and number of classes (N)
@@ -109,6 +126,18 @@ def read1(data_file, perc):
 
 
 def read2(data_file):
+    '''
+        Read Mode 2
+
+        :param data_file: file to read the data.
+        :Observation: Train and test sets are the same.
+
+        :return:
+            s_train: train data matrix
+            t_train: train target matrix
+            s_test: test data matrix
+            t_test: test target matrix
+    '''
 
     with open(data_file, 'r') as f:
         # reading number of features (M) and number of classes (N)
@@ -138,6 +167,18 @@ def read2(data_file):
 
 
 def read3(train_file, test_file):
+    '''
+        Read Mode 3
+
+        :param train_file: file to read the train data.
+        :param test_file: file to read the test data.
+
+        :return:
+            s_train: train data matrix
+            t_train: train target matrix
+            s_test: test data matrix
+            t_test: test target matrix
+    '''
 
     with open(train_file, 'r') as f:
         # reading number of features (M) and number of classes (N)
