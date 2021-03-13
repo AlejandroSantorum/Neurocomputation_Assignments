@@ -23,6 +23,15 @@ DEFAULT_ALPHA = 0.1
 DEFAULT_TOL = 0.001
 # ex_adaline.py read_mode file1 [file2/percentage] [-a alpha] [-tol tolerance]
 def read_input_params():
+    '''
+        Reads input arguments accordingly to the specified exercise.
+
+        :return:
+            read_mode: specified read mode to open data files. It can be 1, 2 or 3.
+            sets: 4-tuple containing train and tests sets read from specified datafile using given read mode.
+            alpha: learning rate for adaline algorithm.
+            tol: tolerance for adaline algorithm.
+    '''
     alpha = DEFAULT_ALPHA
     tol = DEFAULT_TOL
 
@@ -46,6 +55,16 @@ def read_input_params():
 
 
 def main(sets, alpha, tol):
+    '''
+        Executes main functionality of the script, i.e., trains Adaline with given parameters and given data,
+        and prints it with the predictions. It also prints final overall MSE and saves a graph representing
+        the evolution per epoch of the MSE.
+
+        :param sets: 4-tuple containing train and tests sets read from specified datafile using given read mode.
+        :param alpha: learning rate
+        :param tol: tolerance
+        :return: None
+    '''
     xtrain, ytrain, xtest, ytest = sets
 
     n_inputs = len(xtrain[0])
@@ -97,6 +116,7 @@ def main(sets, alpha, tol):
     plt.xlabel('Epoch')
     plt.plot(range(len(adal_nn.epoch_errors)), adal_nn.epoch_errors)
     plt.savefig('imgs/ex_adal_mse.png')
+
 
 
 

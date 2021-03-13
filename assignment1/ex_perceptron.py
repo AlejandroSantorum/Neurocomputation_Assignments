@@ -24,6 +24,16 @@ DEFAULT_TH = 0.2
 DEFAULT_EPOCH = 20
 # ex_perceptron.py read_mode file1 [file2/percentage] [-a alpha] [-th threshold] [-mep max_epoch]
 def read_input_params():
+    '''
+        Reads input arguments accordingly to the specified exercise.
+
+        :return:
+            read_mode: specified read mode to open data files. It can be 1, 2 or 3.
+            sets: 4-tuple containing train and tests sets read from specified datafile using given read mode.
+            alpha: learning rate for perceptron algorithm.
+            threshold: threshold for perceptron algorithm.
+            max_epoch: maximum number of epochs for perceptron algorithm.
+    '''
     alpha = DEFAULT_ALPHA
     threshold = DEFAULT_TH
     max_epoch = DEFAULT_EPOCH
@@ -55,6 +65,17 @@ def read_input_params():
 
 
 def main(sets, alpha, threshold, max_epoch):
+    '''
+        Executes main functionality of the script, i.e., trains Perceptron with given parameters and given data,
+        and prints it with the predictions. It also prints final overall MSE and saves a graph representing
+        the evolution per epoch of the MSE.
+
+        :param sets: 4-tuple containing train and tests sets read from specified datafile using given read mode.
+        :param alpha: learning rate
+        :param threshold: threshold
+        :param max_epoch: maximum number of epochs.
+        :return: None
+    '''
     xtrain, ytrain, xtest, ytest = sets
 
     n_inputs = len(xtrain[0])
@@ -106,7 +127,6 @@ def main(sets, alpha, threshold, max_epoch):
     plt.xlabel('Epoch')
     plt.plot(range(len(perc_nn.epoch_errors)), perc_nn.epoch_errors)
     plt.savefig('imgs/ex_perc_mse.png')
-
 
 
 
