@@ -13,10 +13,10 @@
 
 '''
 
-from .NNClassifier import NNClassifier
-from .NeuralNetwork import NeuralNetwork
-from .Layer import Layer
-from .Neuron import Neuron
+from neuro_clfs.NNClassifier import NNClassifier
+from neuro_clfs.NeuralNetwork import NeuralNetwork
+from neuro_clfs.Layer import Layer
+from neuro_clfs.Neuron import Neuron
 
 class Perceptron(NNClassifier):
     '''

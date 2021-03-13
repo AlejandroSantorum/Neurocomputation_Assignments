@@ -1,2 +1,1 @@
-__all__ = ["Neuron", "Connection", "Layer", "NeuralNetwork", \
-           "NNClassifier", "Perceptron", "Adaline"]
+__all__ = ["Neuron", "Connection", "Layer", "NeuralNetwork", "NNClassifier", "Perceptron", "Adaline"]

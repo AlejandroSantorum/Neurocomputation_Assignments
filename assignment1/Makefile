@@ -104,6 +104,16 @@ ejecuta_ada:
 
 
 # General useful commands
+.PHONY: doc
+doc:
+	mkdir -p doc
+	pydoc -w `find . -name '*.py'`
+	mv *.html doc
+
+.PHONY: clean
+clean:
+	rm -f doc/*.html
+
 requirements:
 	@echo "===> LIBRERÍAS NO-ESTÁNDAR QUE DEBERÍAN INSTALARSE <==="
 	@echo "\t numpy: librería de cálculo matemático eficiente para Python"
