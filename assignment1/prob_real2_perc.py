@@ -31,6 +31,15 @@ DEFAULT_EPOCH = 20
 
 # prob_real2_perc.py [-hyper] [-a alpha] [-th tolerance] [-nreps num_reps] [-mep max_epoch]
 def read_input_params():
+    '''
+        Reads input arguments accordingly to the specified exercise.
+
+        :return:
+            alpha: learning rate for perceptron algorithm.
+            threshold: threshold for perceptron algorithm.
+            num_reps: number of simulations to calculate mean MSE and/or accuracy.
+            max_epoch: maximum number of epochs for perceptron algorithm.
+    '''
     alpha = DEFAULT_ALPHA
     threshold = DEFAULT_TH
     num_reps = DEFAULT_NREPS
@@ -58,11 +67,17 @@ def read_input_params():
 
 
 
-
+# default GridSearch hyperparameters
 ALPHAS = [0.01, 0.05, 0.1, 0.5, 1]
 THS = [0, 0.1, 0.3, 0.5, 1]
 
 def val_hyperparams(alphas=ALPHAS, ths=THS):
+    '''
+        Executes GridSearch hyperparameter tuning accordingly to specified hyperparameters vectors.
+
+        :param alphas: array of different alphas
+        :param ths: array of different thresholds.
+    '''
     headers = ["Thresholds \ Alphas"]
     for alpha in alphas:
         headers.append(str(alpha))
@@ -86,6 +101,16 @@ def val_hyperparams(alphas=ALPHAS, ths=THS):
 
 
 def exec_real2(alpha, th, num_reps, max_epoch):
+    '''
+        Trains Perceptron algorithms and trains it several times in order to get
+        mean MSE and mean accuracy.
+
+        :param alpha: Learning parameter alpha
+        :param th: Threshold. The algorithm activation function depends on this threshold
+        :param num_reps: Number of simulations to calculate average values.
+        :param max_epoch: Maximum number of epochs.
+        :return: mean mse, std mse, mean accuracy, std accuracy
+    '''
     mse_list = []
     acc_list = []
     for i in range(num_reps):
@@ -114,6 +139,15 @@ def exec_real2(alpha, th, num_reps, max_epoch):
 SAVE_PATH = "predicciones/prediccion_perceptron.txt"
 
 def predict_file(alpha, th, max_epoch):
+    '''
+        It generates the predictions of 'Problema Real 2' given a certain hyperparameters for Perceptron algorithm.
+        The predicted outputs are stored in predicciones/prediccion_perceptron.txt
+
+        :param alpha: Learning parameter alpha
+        :param tol: Tolerance.
+        :param max_epoch: Maximum number of epochs.
+        :return: None
+    '''
     sets = read3(TRAIN_PATH, PREDICT_PATH)
     xtrain, ytrain, xtest, ytest = sets # ytest is useless is read mode 3
     n_inputs = len(xtrain[0])

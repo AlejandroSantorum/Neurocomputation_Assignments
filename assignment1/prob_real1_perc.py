@@ -31,6 +31,15 @@ DEFAULT_EPOCH = 20
 
 # prob_real1_perc.py [-hyper] [-a alpha] [-th threshold] [-nreps num_reps] [-mep max_epoch]
 def read_input_params():
+    '''
+        Reads input arguments accordingly to the specified exercise.
+
+        :return:
+            alpha: learning rate for perceptron algorithm.
+            threshold: threshold for perceptron algorithm.
+            num_reps: number of simulations to calculate mean MSE and/or accuracy.
+            max_epoch: maximum number of epochs for perceptron algorithm.
+    '''
     alpha = DEFAULT_ALPHA
     threshold = DEFAULT_TH
     num_reps = DEFAULT_NREPS
@@ -63,11 +72,17 @@ def read_input_params():
 
 
 
-
+# default GridSearch hyperparameters
 ALPHAS = [0.01, 0.05, 0.1, 0.5, 1]
 THS = [0, 0.25, 0.5, 1]
 
 def val_hyperparams(alphas=ALPHAS, ths=THS):
+    '''
+        Executes GridSearch hyperparameter tuning accordingly to specified hyperparameters vectors.
+
+        :param alphas: array of different alphas
+        :param ths: array of different thresholds.
+    '''
     L_RES = []
     L_RES_ACC = []
 
@@ -159,6 +174,16 @@ def val_hyperparams(alphas=ALPHAS, ths=THS):
 
 
 def exec_real1(alpha, threshold, num_reps, max_epoch):
+    '''
+        Trains Perceptron algorithms and trains it several times in order to get
+        mean MSE and mean accuracy.
+
+        :param alpha: Learning parameter alpha
+        :param threshold: Threshold. The algorithm activation function depends on this threshold
+        :param num_reps: Number of simulations to calculate average values.
+        :param max_epoch: Maximum number of epochs.
+        :return: mean mse, std mse, mean accuracy, std accuracy
+    '''
     mse_list = []
     acc_list = []
     for i in range(num_reps):

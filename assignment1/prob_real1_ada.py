@@ -30,6 +30,14 @@ DEFAULT_PERCENTAGE = 0.75
 
 # prob_real1_ada.py [-hyper] [-a alpha] [-tol tolerance] [-nreps num_reps]
 def read_input_params():
+    '''
+        Reads input arguments accordingly to the specified exercise.
+
+        :return:
+            alpha: learning rate for perceptron algorithm.
+            tol: tolerance for adaline algorithm.
+            num_reps: number of simulations to calculate mean MSE and/or accuracy.
+    '''
     alpha = DEFAULT_ALPHA
     tol = DEFAULT_TOL
     num_reps = DEFAULT_NREPS
@@ -56,11 +64,17 @@ def read_input_params():
 
 
 
-
+# default GridSearch hyperparameters
 ALPHAS = [0.005, 0.01, 0.05, 0.1]
 TOLS = [0.001, 0.005, 0.01, 0.05]
 
 def val_hyperparams(alphas=ALPHAS, tols=TOLS):
+    '''
+        Executes GridSearch hyperparameter tuning accordingly to specified hyperparameters vectors.
+
+        :param alphas: array of different alphas
+        :param tols: array of different tolerances.
+    '''
     L_RES = []
 
     # If alpha is fixed
@@ -121,6 +135,15 @@ def val_hyperparams(alphas=ALPHAS, tols=TOLS):
 
 
 def exec_real1(alpha, tol, num_reps):
+    '''
+        Trains Adaline algorithms and trains it several times in order to get
+        mean MSE and mean accuracy.
+
+        :param alpha: Learning parameter alpha
+        :param tol: Tolerance.
+        :param num_reps: Number of simulations to calculate average values.
+        :return: mean mse, std mse, mean accuracy, std accuracy
+    '''
     mse_list = []
     acc_list = []
     for i in range(num_reps):
