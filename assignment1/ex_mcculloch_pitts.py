@@ -141,14 +141,3 @@ if __name__ == "__main__":
 
     nn = build_nn_ex1()
     run_ex_mccPitts(nn, file_lines)
-
-## TODO:
-#   1) Pretty printer -> done
-#   2) Hacer las preguntas -> done
-#   3) Cabeceras de ficheros, funciones y un par de comentarios (pydoc) -> TODO
-
-## Preguntas:
-#   1) ¿Hay que mostrar el estado de la capa oculta/salida despues de que se acaben los ejemplos? -> Sí, poniendo entradas "basura"
-#   2) ¿Podríamos simplificar la red neuronal para que se obtiviese la salida correcta en t+1? -> No
-#   3) ¿Es una OR de tres entradas o el circuito de la figura 2? -> El de la figura
-#   4) ¿Es necesario utilizar gitlab o podemos usar github? -> Github
