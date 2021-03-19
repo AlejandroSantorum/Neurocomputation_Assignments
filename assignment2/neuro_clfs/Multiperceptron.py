@@ -97,15 +97,18 @@ class Multiperceptron(NNClassifier):
         self.nn.add(output_layer)
 
 
-    def _forward_propagation(self, i):
+    def _forward_propagation(self):
         self.former_values = []
         self.former_activations = []
         # input layer trigger
         self.nn.trigger()
+        '''
         temp_former_activations = []
         for neuron in self.nn.layers[0].neurons:
             temp_former_activations.append(neuron.value)
         self.former_activations.append(temp_former_activations)
+        '''
+        temp_former_activations = []
         for neuron in self.nn.layers[0].neurons:
             temp_former_activations.append(neuron.f_x)
         self.former_activations.append(temp_former_activations)
@@ -113,12 +116,15 @@ class Multiperceptron(NNClassifier):
         # rest of the network propagation
         for layer in self.nn.layers[1:]:
             self.nn.propagate()
-            self.nn.trigger()
             temp_former_values = []
+            for neuron in layer.neurons:
+                temp_former_values.append(neuron.value)
+
+            self.nn.trigger()
             temp_former_activations = []
             for neuron in layer.neurons:
                 temp_former_activations.append(neuron.f_x)
-                temp_former_values.append(neuron.value)
+
             self.former_values.append(temp_former_values)
             self.former_activations.append(temp_former_activations)
 
@@ -128,6 +134,7 @@ class Multiperceptron(NNClassifier):
         # getting last array of predictions (each output neuron activation)
         predictions = self.former_activations[-1]
         prev_layer = self.former_activations[-2]
+
         # getting last array of values (each output neuron value)
         pred_values = self.former_values[-1]
         deltas_prev_layer = []
@@ -168,7 +175,8 @@ class Multiperceptron(NNClassifier):
             while Delta != []:
                 for neuron in current_layer.neurons:
                     for i in range(len(next_layer.neurons)):
-                        neuron.connections[i].update_weight(Delta.pop(0))
+                        aux = Delta.pop(0)
+                        neuron.connections[i].update_weight(aux)
             if j == len(self.Deltas) - 1:
                 break
             next_layer = current_layer
@@ -202,7 +210,7 @@ class Multiperceptron(NNClassifier):
                     neuron.initialise(xtrain[i][j])
 
                 # calculate neurons values
-                self._forward_propagation(i)
+                self._forward_propagation()
 
                 # backpropagate gradient
                 self._backward_propagation(ytrain[i])
@@ -237,10 +245,16 @@ class Multiperceptron(NNClassifier):
                 self.nn.trigger()
 
             outputs = self.nn.get_output()
-            max_idx = outputs.index(max(outputs))
 
-            ret = [-1]*len(outputs)
-            ret[max_idx] = 1
-            ytest.append(ret)
+            if len(outputs) == 1:
+                if outputs[0] > 0:
+                    ytest.append([1])
+                else:
+                    ytest.append([-1])
+            else:
+                ret = [-1]*len(outputs)
+                max_idx = outputs.index(max(outputs))
+                ret[max_idx] = 1
+                ytest.append(ret)
 
         return ytest

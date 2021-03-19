@@ -22,7 +22,7 @@ from tabulate import tabulate
 DEFAULT_ALPHA = 0.1
 DEFAULT_NEPOCHS = 100
 DEFAULT_NORM = False
-DEFAULT_HIDDEN = [20]
+DEFAULT_HIDDEN = []
 # ex_multiperceptron.py read_mode file1 [file2/percentage] [-a alpha] [-nep n_epochs] [-norm] [-h] [16 8 4]
 def read_input_params():
     '''
@@ -120,26 +120,11 @@ def main(sets, alpha, n_epochs, norm, hidden):
     print("MSE Loss:", multiperc_nn.error(ytest, ypred, metric='mse'))
     print("Accuracy:", 1-multiperc_nn.error(ytest, ypred, metric='acc'))
 
-    '''
-    weight_list = []
-    input_layer = adal_nn.nn.layers[0]
-    for neuron in input_layer.neurons:
-        for conn in neuron.connections:
-            weight_list.append(conn.weight)
-
-    b = weight_list[0]
-    weight_list = weight_list[1:]
-    print("Decision boundary: ", end='')
-    for (i, w) in enumerate(weight_list):
-        print(str(round(w, 2)) + "·X"+str(i+1) + " + ", end='')
-    print(str(round(b, 2)) + " = 0")
-
-    plt.title('[Adaline] Evolution of MSE per epoch')
+    plt.title('[Multiperceptron] Evolution of MSE per epoch')
     plt.ylabel('MSE')
     plt.xlabel('Epoch')
-    plt.plot(range(len(adal_nn.epoch_errors)), adal_nn.epoch_errors)
+    plt.plot(range(len(multiperc_nn.epoch_errors)), multiperc_nn.epoch_errors)
     plt.savefig('imgs/ex_adal_mse.png')
-    '''
 
 
 
