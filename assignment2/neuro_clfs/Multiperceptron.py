@@ -22,11 +22,11 @@ from neuro_clfs.Neuron import Neuron
 import numpy as np
 
 
-def __bipolar_sigmoid(x):
+def bipolar_sigmoid(x):
     return 2/(1+np.exp(-x)) - 1
 
-def __bipolar_sigmoid_derivative(x):
-    return 0.5 * (1 + __bipolar_sigmoid(x)) * (1 - __bipolar_sigmoid(x))
+def bipolar_sigmoid_derivative(x):
+    return 0.5 * (1 + bipolar_sigmoid(x)) * (1 - bipolar_sigmoid(x))
 
 
 
@@ -75,7 +75,7 @@ class Multiperceptron(NNClassifier):
         for i in range(len(self.hidden_layer_sizes)):
             layer = Layer()
             layer.add(Neuron(Neuron.Type.Bias))
-            for j in range(self.hidden_layer_sizes[j]):
+            for j in range(self.hidden_layer_sizes[i]):
                 # TODO: if statement if several activations are implemented
                 if activation == 'bipolar':
                     layer.add(Neuron(Neuron.Type.BipolarSigmoid))
@@ -97,29 +97,33 @@ class Multiperceptron(NNClassifier):
         self.nn.add(output_layer)
 
 
-    def _forward_propagation(self):
+    def _forward_propagation(self, i):
         self.former_values = []
         self.former_activations = []
         # input layer trigger
         self.nn.trigger()
         temp_former_activations = []
-        for neuron in self.nn.layers[0]:
+        for neuron in self.nn.layers[0].neurons:
+            temp_former_activations.append(neuron.value)
+        self.former_activations.append(temp_former_activations)
+        for neuron in self.nn.layers[0].neurons:
             temp_former_activations.append(neuron.f_x)
         self.former_activations.append(temp_former_activations)
+
         # rest of the network propagation
         for layer in self.nn.layers[1:]:
             self.nn.propagate()
             self.nn.trigger()
             temp_former_values = []
             temp_former_activations = []
-            for neuron in layer:
+            for neuron in layer.neurons:
                 temp_former_activations.append(neuron.f_x)
                 temp_former_values.append(neuron.value)
             self.former_values.append(temp_former_values)
             self.former_activations.append(temp_former_activations)
 
 
-    def _backward_propagation(self, ytrain):
+    def _backward_propagation(self, ytrain_array):
         self.Deltas = []
         # getting last array of predictions (each output neuron activation)
         predictions = self.former_activations[-1]
@@ -128,27 +132,31 @@ class Multiperceptron(NNClassifier):
         pred_values = self.former_values[-1]
         deltas_prev_layer = []
         Delta_layer = []
-        for k,neuron in enumerate(self.nn.layers[-1]):
+        for k,neuron in enumerate(self.nn.layers[-1].neurons):
             if self.activation == 'bipolar':
-                delta_k = (ytrain[k]-predictions[k]) * __bipolar_sigmoid_derivative(pred_values[k])
+                delta_k = (ytrain_array[k]-predictions[k]) * bipolar_sigmoid_derivative(pred_values[k])
                 deltas_prev_layer.append(delta_k)
                 for act in prev_layer:
                     Delta_layer.append(self.alpha * delta_k * act)
         self.Deltas.append(Delta_layer)
 
-        for (i,layer) in enumerate(reversed(self.nn.layers[:-1])):
-            pred_values = reversed(self.former_values)[i+1]
-            prev_layer = reversed(self.former_activations)[i+2]
+        for (i,layer) in enumerate(reversed(self.nn.layers[1:-1])):
+            #pred_values = reversed(self.former_values)[i+1]
+            pred_values = self.former_values[::-1][i+1]
+            #prev_layer = reversed(self.former_activations)[i+2]
+            prev_layer = self.former_activations[::-1][i+2]
 
-            deltas_prev_layer = []
+            deltas_prev_layer_new = []
             Delta_layer = []
-            for (j,neuron) in enumerate(layer):
+            for (j,neuron) in enumerate(layer.neurons):
                 delta_in = 0
-                for (k, connection) in enumerate(neuron):
+                for (k, connection) in enumerate(neuron.connections):
                     delta_in += connection.weight * deltas_prev_layer[k]
-                delta_j = delta_in * __bipolar_sigmoid_derivative(pred_values[j])
+                delta_j = delta_in * bipolar_sigmoid_derivative(pred_values[j])
+                deltas_prev_layer_new.append(delta_j)
                 for act in prev_layer:
                     Delta_layer.append(self.alpha * delta_j * act)
+            deltas_prev_layer = deltas_prev_layer_new
             self.Deltas.append(Delta_layer)
 
 
@@ -158,9 +166,11 @@ class Multiperceptron(NNClassifier):
 
         for j,Delta in enumerate(self.Deltas):
             while Delta != []:
-                for neuron in layer:
-                    for i in range(len(next_layer)):
+                for neuron in current_layer.neurons:
+                    for i in range(len(next_layer.neurons)):
                         neuron.connections[i].update_weight(Delta.pop(0))
+            if j == len(self.Deltas) - 1:
+                break
             next_layer = current_layer
             current_layer = self.nn.layers[-3-j]
 
@@ -192,9 +202,11 @@ class Multiperceptron(NNClassifier):
                     neuron.initialise(xtrain[i][j])
 
                 # calculate neurons values
-                self._forward_propagation()
+                self._forward_propagation(i)
+
                 # backpropagate gradient
-                self._backward_propagation(ytrain)
+                self._backward_propagation(ytrain[i])
+
                 # update weights
                 self._update_nn_weights()
 
@@ -217,10 +229,18 @@ class Multiperceptron(NNClassifier):
             for (j, neuron) in enumerate(input_layer.neurons[1:]):
                 neuron.initialise(xtest[i][j])
             # calculate output neuron response
-            self.nn.trigger()
-            self.nn.propagate()
-            self.nn.trigger()
+            # self._forward_propagation()
 
-            ytest.append(self.nn.get_output())
+            self.nn.trigger()
+            for layer in self.nn.layers[1:]:
+                self.nn.propagate()
+                self.nn.trigger()
+
+            outputs = self.nn.get_output()
+            max_idx = outputs.index(max(outputs))
+
+            ret = [-1]*len(outputs)
+            ret[max_idx] = 1
+            ytest.append(ret)
 
         return ytest

@@ -227,3 +227,13 @@ def read3(train_file, test_file):
             t_test.append(t_aux)
 
     return s_train, t_train, s_test, t_test
+
+
+
+def bipolar_encode(set):
+    for i in range(len(set)):
+        example = set[i]
+        for j,val in enumerate(example):
+            if val == 0:
+                set[i][j] = -1
+    return set
