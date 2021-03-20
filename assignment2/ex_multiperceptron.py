@@ -61,7 +61,11 @@ def read_input_params():
             j = idx+2
             item = sys.argv[j]
             while '-' not in item:
-                hid_aux.append(int(item))
+                n_neur = int(item)
+                if n_neur <= 0:
+                    print("Error: number of neurons must be positive")
+                    exit()
+                hid_aux.append(n_neur)
                 j += 1
                 if j == len(sys.argv[1:]):
                     break
@@ -124,7 +128,7 @@ def main(sets, alpha, n_epochs, norm, hidden):
     plt.ylabel('MSE')
     plt.xlabel('Epoch')
     plt.plot(range(len(multiperc_nn.epoch_errors)), multiperc_nn.epoch_errors)
-    plt.savefig('imgs/ex_adal_mse.png')
+    plt.savefig('imgs/ex_multiperc_mse.png')
 
 
 

@@ -94,6 +94,7 @@ class Layer:
             for orig_neuron in self.neurons:
                 orig_neuron.connect(neuron, random.uniform(-0.5, 0.5))
 
+
     def trigger(self):
         '''
             Triggers the current layer neurons

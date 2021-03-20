@@ -63,6 +63,35 @@ class Multiperceptron(NNClassifier):
         # building neural network with given data
         self.nn = NeuralNetwork()
 
+        input_layer = Layer()
+        input_layer.add(Neuron(Neuron.Type.Bias))
+        input_layer.add(Neuron(Neuron.Type.Direct))
+        input_layer.add(Neuron(Neuron.Type.Direct))
+
+        hid_layer = Layer()
+        hid_layer.add(Neuron(Neuron.Type.Bias))
+        hid_layer.add(Neuron(Neuron.Type.BipolarSigmoid))
+        hid_layer.add(Neuron(Neuron.Type.BipolarSigmoid))
+
+        input_layer.neurons[0].connect(hid_layer.neurons[1], 2)
+        input_layer.neurons[0].connect(hid_layer.neurons[2], -0.1)
+        input_layer.neurons[1].connect(hid_layer.neurons[1], -2)
+        input_layer.neurons[1].connect(hid_layer.neurons[2], 4.3)
+        input_layer.neurons[2].connect(hid_layer.neurons[1], 9.2)
+        input_layer.neurons[2].connect(hid_layer.neurons[2], 8.8)
+
+        output_layer = Layer()
+        output_layer.add(Neuron(Neuron.Type.BipolarSigmoid))
+
+        hid_layer.neurons[0].connect(output_layer.neurons[0], -0.8)
+        hid_layer.neurons[1].connect(output_layer.neurons[0], -4.5)
+        hid_layer.neurons[2].connect(output_layer.neurons[0], 5.3)
+
+        self.nn.add(input_layer)
+        self.nn.add(hid_layer)
+        self.nn.add(output_layer)
+
+        '''
         # creating input layer and its neurons
         input_layer = Layer()
         input_layer.add(Neuron(Neuron.Type.Bias))
@@ -95,6 +124,7 @@ class Multiperceptron(NNClassifier):
         for hid_layer in hidden_layers:
             self.nn.add(hid_layer)
         self.nn.add(output_layer)
+        '''
 
 
     def _forward_propagation(self):
@@ -150,16 +180,17 @@ class Multiperceptron(NNClassifier):
         for (i,layer) in enumerate(reversed(self.nn.layers[1:-1])):
             #pred_values = reversed(self.former_values)[i+1]
             pred_values = self.former_values[::-1][i+1]
+
             #prev_layer = reversed(self.former_activations)[i+2]
             prev_layer = self.former_activations[::-1][i+2]
 
             deltas_prev_layer_new = []
             Delta_layer = []
             for (j,neuron) in enumerate(layer.neurons):
-                delta_in = 0
+                delta_in_j = 0
                 for (k, connection) in enumerate(neuron.connections):
-                    delta_in += connection.weight * deltas_prev_layer[k]
-                delta_j = delta_in * bipolar_sigmoid_derivative(pred_values[j])
+                    delta_in_j += connection.weight * deltas_prev_layer[k]
+                delta_j = delta_in_j * bipolar_sigmoid_derivative(pred_values[j])
                 deltas_prev_layer_new.append(delta_j)
                 for act in prev_layer:
                     Delta_layer.append(self.alpha * delta_j * act)
@@ -177,6 +208,7 @@ class Multiperceptron(NNClassifier):
                     for i in range(len(next_layer.neurons)):
                         aux = Delta.pop(0)
                         neuron.connections[i].update_weight(aux)
+
             if j == len(self.Deltas) - 1:
                 break
             next_layer = current_layer
@@ -217,6 +249,9 @@ class Multiperceptron(NNClassifier):
 
                 # update weights
                 self._update_nn_weights()
+
+                self.nn.print_nn()
+                exit()
 
             self.epoch_errors.append(self.error(ytrain, self.predict(xtrain), metric='mse'))
 
