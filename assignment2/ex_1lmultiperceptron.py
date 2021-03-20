@@ -4,7 +4,7 @@
         · Alejandro Santorum Varela - alejandro.santorum@estudiante.uam.es
         · Sergio Galán Martín - sergio.galanm@estudiante.uam.es
 
-    File: ex_multiperceptron.py
+    File: ex_1lmultiperceptron.py
     Date: Mar. 19, 2021
     Project: Assignment 2 - Neurocomputation [EPS-UAM]
 
@@ -14,7 +14,7 @@
 
 import sys
 import matplotlib.pyplot as plt
-from neuro_clfs.Multiperceptron import Multiperceptron
+from neuro_clfs.L1_Multiperceptron import L1_Multiperceptron
 from read_data_utils import parse_read_mode, bipolar_encode
 from tabulate import tabulate
 
@@ -95,7 +95,7 @@ def main(sets, alpha, n_epochs, norm, hidden):
     n_inputs = len(xtrain[0])
     n_outputs = len(ytrain[0])
 
-    multiperc_nn = Multiperceptron(n_inputs, n_outputs, hidden_layer_sizes=hidden, alpha=alpha,
+    multiperc_nn = L1_Multiperceptron(n_inputs, hidden[0], n_outputs, alpha=alpha,
                                    activation='bipolar', n_epochs=n_epochs, verbose=True)
 
     multiperc_nn.train(xtrain, ytrain)

@@ -34,6 +34,7 @@ class Neuron:
         BipolarSigmoid = 3
         CustomSigmoid = 4
         Perceptron = 5
+        Sigmoid = 6
 
     def __init__(self, type, threshold=0.5, active_output=None, inactive_output=None):
         '''
@@ -92,6 +93,8 @@ class Neuron:
             self.f_x = 1.0
         elif self.type is Neuron.Type.BipolarSigmoid:
             self.f_x = 2/(1 + np.exp(-self.value)) - 1
+        elif self.type is Neuron.Type.Sigmoid:
+            self.f_x = 1/(1 + np.exp(-self.value))
         elif self.type is Neuron.Type.McCulloch:
             self.f_x = self.active_output if self.value >= self.threshold else self.inactive_output
         elif self.type is Neuron.Type.Perceptron:
