@@ -73,10 +73,13 @@ class Multiperceptron(NNClassifier):
         hid_layer.add(Neuron(Neuron.Type.BipolarSigmoid))
         hid_layer.add(Neuron(Neuron.Type.BipolarSigmoid))
 
+        input_layer.neurons[0].connect(hid_layer.neurons[0], 0)
         input_layer.neurons[0].connect(hid_layer.neurons[1], 2)
         input_layer.neurons[0].connect(hid_layer.neurons[2], -0.1)
+        input_layer.neurons[1].connect(hid_layer.neurons[0], 0)
         input_layer.neurons[1].connect(hid_layer.neurons[1], -2)
         input_layer.neurons[1].connect(hid_layer.neurons[2], 4.3)
+        input_layer.neurons[2].connect(hid_layer.neurons[0], 0)
         input_layer.neurons[2].connect(hid_layer.neurons[1], 9.2)
         input_layer.neurons[2].connect(hid_layer.neurons[2], 8.8)
 
