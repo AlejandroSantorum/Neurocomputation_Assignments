@@ -67,7 +67,7 @@ def read_input_params():
                     exit()
                 hid_aux.append(n_neur)
                 j += 1
-                if j == len(sys.argv[1:]):
+                if j >= len(sys.argv[1:]):
                     break
                 else:
                     item = sys.argv[j]

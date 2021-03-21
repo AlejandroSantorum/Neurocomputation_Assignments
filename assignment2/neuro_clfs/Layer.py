@@ -29,6 +29,7 @@ class Layer:
         '''
         ZeroWeight = 0
         AdalineWeight = 1
+        DebugWeight = 2
 
     def __init__(self):
         '''
@@ -93,6 +94,10 @@ class Layer:
         elif weight_mode is Layer.WeightMode.AdalineWeight:
             for orig_neuron in self.neurons:
                 orig_neuron.connect(neuron, random.uniform(-0.5, 0.5))
+
+        if weight_mode is Layer.WeightMode.DebugWeight:
+            for orig_neuron in self.neurons:
+                orig_neuron.connect(neuron, 0.1)
 
 
     def trigger(self):

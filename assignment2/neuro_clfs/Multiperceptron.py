@@ -95,6 +95,7 @@ class Multiperceptron(NNClassifier):
                 layer.add(Neuron(self.neuron_types))
             # weight mode AdalineWeight := random initialization between a small interval
             prev_layer.connectLayer(layer, Layer.WeightMode.AdalineWeight)
+            #prev_layer.connectLayer(layer, Layer.WeightMode.DebugWeight)
             hidden_layers.append(layer)
             prev_layer = layer
 
@@ -103,6 +104,7 @@ class Multiperceptron(NNClassifier):
         for i in range(n_outputs):
             output_layer.add(Neuron(self.neuron_types))
         prev_layer.connectLayer(output_layer, Layer.WeightMode.AdalineWeight)
+        #prev_layer.connectLayer(output_layer, Layer.WeightMode.DebugWeight)
 
         # adding layers to neural network
         self.nn.add(input_layer)
@@ -135,6 +137,7 @@ class Multiperceptron(NNClassifier):
 
             self.former_values.append(temp_former_values)
             self.former_activations.append(temp_former_activations)
+
 
 
     def _backward_propagation(self, ytrain_array, id):
@@ -170,7 +173,6 @@ class Multiperceptron(NNClassifier):
                 if last_hidden_layer_flag:
                     for (k, connection) in enumerate(neuron.connections):
                         delta_in_j += connection.weight * deltas_prev_layer[k]
-                    last_hidden_layer_flag = False
                 else:
                     for (k, connection) in enumerate(neuron.connections[1:]):
                         delta_in_j += connection.weight * deltas_prev_layer[k]
@@ -178,11 +180,13 @@ class Multiperceptron(NNClassifier):
                 deltas_prev_layer_new.append(delta_j)
                 for act in prev_layer:
                     Delta_layer.append(self.alpha * delta_j * act)
+            last_hidden_layer_flag = False
             deltas_prev_layer = deltas_prev_layer_new
             self.Deltas.append(Delta_layer)
 
 
     def _update_nn_weights(self):
+
         current_layer = self.nn.layers[-2]
         next_layer = self.nn.layers[-1]
 
@@ -190,14 +194,15 @@ class Multiperceptron(NNClassifier):
 
         for j,Delta in enumerate(self.Deltas):
 
-            for neuron in current_layer.neurons:
+            for k,neuron in enumerate(current_layer.neurons):
+                l = len(current_layer.neurons) # counting bias
                 if output_layer_flag:
                     for i in range(len(next_layer.neurons)):
-                        aux = Delta.pop(0)
+                        aux = Delta[k + i*l]
                         neuron.connections[i].update_weight(aux)
                 else:
                     for i in range(len(next_layer.neurons)-1):
-                        aux = Delta.pop(0)
+                        aux = Delta[k + i*l]
                         neuron.connections[i+1].update_weight(aux)
             output_layer_flag = False
 

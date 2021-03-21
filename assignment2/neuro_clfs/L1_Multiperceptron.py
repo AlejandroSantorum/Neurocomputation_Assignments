@@ -88,6 +88,7 @@ class L1_Multiperceptron(NNClassifier):
             hidden_layer.add(Neuron(self.neuron_types))
 
         input_layer.connectLayer(hidden_layer, Layer.WeightMode.AdalineWeight)
+        #input_layer.connectLayer(hidden_layer, Layer.WeightMode.DebugWeight)
 
         # creating output layer and its neurons
         output_layer = Layer()
@@ -95,6 +96,7 @@ class L1_Multiperceptron(NNClassifier):
             output_layer.add(Neuron(self.neuron_types))
 
         hidden_layer.connectLayer(output_layer, Layer.WeightMode.AdalineWeight)
+        #hidden_layer.connectLayer(output_layer, Layer.WeightMode.DebugWeight)
 
         # adding layers to neural network
         self.nn.add(input_layer)
@@ -133,8 +135,6 @@ class L1_Multiperceptron(NNClassifier):
 
 
     def _backward_propagation(self, ytrain_array, id):
-        self.Deltas = []
-
         self.Delta_W = np.zeros((len(self.nn.layers[1].neurons), len(self.nn.layers[2].neurons)))
         # Paso 6
         deltas_k = []
@@ -154,7 +154,6 @@ class L1_Multiperceptron(NNClassifier):
             del_j = delta_in_j * self.activation_func_deriv(self.Z_in[j])
             for i in range(len(self.X)):
                 self.Delta_V[i][j] = self.alpha * del_j * self.X[i]
-
 
 
     def _update_nn_weights(self):
