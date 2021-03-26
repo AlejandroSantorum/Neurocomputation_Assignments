@@ -15,6 +15,7 @@
 
 
 import sys, math, random
+import numpy as np
 
 
 def _print_help():
@@ -90,7 +91,7 @@ def read1(data_file, perc):
         total_lines = len(file_lines)
         ntrain_examples = math.floor(perc*total_lines)
         # shuffling data matrix
-        random.shuffle(file_lines)
+        #random.shuffle(file_lines)
 
         # building train set
         s_train = []
@@ -115,7 +116,7 @@ def read1(data_file, perc):
             t_aux = []
             for i in range(M):
                 s_aux.append(float(data_line[i]))
-            for i in range(M,len(data_line)):
+            for i in range(M, len(data_line)):
                 t_aux.append(float(data_line[i]))
             s_test.append(s_aux)
             t_test.append(t_aux)
@@ -237,3 +238,14 @@ def bipolar_encode(set):
             if val == 0:
                 set[i][j] = -1
     return set
+
+
+
+def normalize(xtrain, xtest):
+    mean = np.mean(xtrain, axis=0)
+    std = np.std(xtrain, axis=0)
+    for i,train in enumerate(xtrain):
+        xtrain[i] = np.divide(np.subtract(train, mean), std)
+    for i,test in enumerate(xtest):
+        xtest[i] = np.divide(np.subtract(test, mean), std)
+    return xtrain, xtest

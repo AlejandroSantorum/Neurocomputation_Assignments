@@ -15,8 +15,10 @@
 import sys
 import matplotlib.pyplot as plt
 from neuro_clfs.Multiperceptron import Multiperceptron
-from read_data_utils import parse_read_mode, bipolar_encode
+from read_data_utils import parse_read_mode, bipolar_encode, normalize
 from tabulate import tabulate
+import numpy as np
+
 
 
 DEFAULT_ALPHA = 0.1
@@ -91,6 +93,10 @@ def main(sets, alpha, n_epochs, norm, hidden):
 
     ytrain = bipolar_encode(ytrain)
     ytest = bipolar_encode(ytest)
+
+    # Normalizing data if specified by user
+    if norm:
+        xtrain, xtest = normalize(xtrain, xtest)
 
     n_inputs = len(xtrain[0])
     n_outputs = len(ytrain[0])
