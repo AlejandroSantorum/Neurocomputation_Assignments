@@ -43,7 +43,7 @@ class Multiperceptron(NNClassifier):
     '''
 
     def __init__(self, n_inputs, n_outputs, hidden_layer_sizes=None, alpha=1.0,\
-                 activation='bipolar', n_epochs=100, verbose=False):
+                 activation='bipolar', n_epochs=100, batch_size=None, verbose=False):
         '''
             Constructor of a new object 'Multiperceptron'.
 
@@ -57,8 +57,10 @@ class Multiperceptron(NNClassifier):
             :param activation: (Optional) Activation function of the neurons.
                 activation='bipolar': it uses bipolar sigmoid function.
                 activation='sigmoid': it uses binary sigmoid function.
-            :param verbose: (Optional) If set to True, feedback of each epoch is printed.
             :param n_epochs: (Optional) Number of epochs. Default=100
+            :param batch_size: (Optional) Size of minibatches for stochastic training.
+                Default: 200.
+            :param verbose: (Optional) If set to True, feedback of each epoch is printed.
             :return: None
         '''
         self.hidden_layer_sizes = hidden_layer_sizes
@@ -73,6 +75,7 @@ class Multiperceptron(NNClassifier):
             self.activation_func = sigmoid
             self.activation_func_deriv = sigmoid_derivative
         self.n_epochs = n_epochs
+        self.batch_size = batch_size
         self.verbose = verbose
         self.epoch_errors = []
         self.epoch_accs = []
