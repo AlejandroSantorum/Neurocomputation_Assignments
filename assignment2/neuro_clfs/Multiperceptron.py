@@ -20,6 +20,7 @@ from neuro_clfs.Layer import Layer
 from neuro_clfs.Neuron import Neuron
 
 import numpy as np
+import time
 
 
 def bipolar_sigmoid(x):
@@ -59,7 +60,6 @@ class Multiperceptron(NNClassifier):
                 activation='sigmoid': it uses binary sigmoid function.
             :param n_epochs: (Optional) Number of epochs. Default=100
             :param batch_size: (Optional) Size of minibatches for stochastic training.
-                Default: 200.
             :param verbose: (Optional) If set to True, feedback of each epoch is printed.
             :return: None
         '''
@@ -221,7 +221,10 @@ class Multiperceptron(NNClassifier):
 
             It trains the Multiperceptron object accordingly to perceptron algorithm.
         '''
-        n_train = len(xtrain)
+        if self.batch_size is not None:
+            n_train = self.batch_size
+        else:
+            n_train = len(xtrain)
 
         # getting input and output layers
         input_layer = self.nn.layers[0]
@@ -234,7 +237,12 @@ class Multiperceptron(NNClassifier):
             if self.verbose:
                 print("Epoch", k)
 
-            # an epoch trains over all examples
+            # an epoch trains over all examples or batch
+            if self.batch_size is not None:
+                joint = list(zip(xtrain, ytrain))
+                np.random.shuffle(joint)
+                xtrain, ytrain = zip(*joint)
+
             for i in range(n_train):
                 # init input layer values
                 for (j, neuron) in enumerate(input_layer.neurons[1:]):
@@ -249,9 +257,9 @@ class Multiperceptron(NNClassifier):
                 # update weights
                 self._update_nn_weights()
 
-            ypred_epoch = self.predict(xtrain)
-            self.epoch_errors.append(self.error(ytrain, ypred_epoch, metric='mse'))
-            self.epoch_accs.append(1-self.error(ytrain, ypred_epoch, metric='acc'))
+            ypred_epoch = self.predict(xtrain[:n_train])
+            self.epoch_errors.append(self.error(ytrain[:n_train], ypred_epoch, metric='mse'))
+            self.epoch_accs.append(1-self.error(ytrain[:n_train], ypred_epoch, metric='acc'))
 
 
     def predict(self, xtest):
