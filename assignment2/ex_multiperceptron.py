@@ -135,9 +135,6 @@ def exec_train_predict(sets, alpha, n_epochs, norm, hidden, batch_size, hyper=Fa
     # Only printing feedback if we are not devoloping a hyperparameter seach
     multiperc_nn.nn.print_nn()
 
-    print("MSE Loss:", mse_loss)
-    print("Accuracy:", acc)
-
     headers = []
     for i in range(n_inputs):
         headers.append("x"+str(i+1))
@@ -172,6 +169,9 @@ def exec_train_predict(sets, alpha, n_epochs, norm, hidden, batch_size, hyper=Fa
     axes[0].plot(range(len(multiperc_nn.epoch_errors)), multiperc_nn.epoch_errors)
     axes[1].plot(range(len(multiperc_nn.epoch_accs)), multiperc_nn.epoch_accs)
     plt.savefig('imgs/MSE+Acc_multiperc.png')
+
+    print("MSE Loss:", mse_loss)
+    print("Accuracy:", acc, "("+str(acc*100)+"%)")
 
 
 
