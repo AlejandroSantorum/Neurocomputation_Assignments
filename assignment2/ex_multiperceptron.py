@@ -147,7 +147,7 @@ def exec_train_predict(sets, alpha, n_epochs, norm, hidden, batch_size, hyper=Fa
     for i in range(len(ytest)):
         res = []
         for j in range(n_inputs):
-            res.append(str(xtest[i][j]))
+            res.append(str(round(xtest[i][j], 4)))
         for j in range(n_outputs):
             res.append(str(ytest[i][j]))
         for j in range(n_outputs):
