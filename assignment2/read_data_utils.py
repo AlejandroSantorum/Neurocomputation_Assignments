@@ -5,14 +5,14 @@
         · Sergio Galán Martín - sergio.galanm@estudiante.uam.es
 
     File: read_data_utils.py
-    Date: Feb. 20, 2021
-    Project: Assignment 1 - Neurocomputation [EPS-UAM]
+    Date: Apr. 10, 2021
+    Project: Assignment 2 - Neurocomputation [EPS-UAM]
 
     Description: This file contains the implementation of several reading functions.
         Its goal is to read the dataset/s and return the specified parameters.
+        It also supports normalization and bipolar codification.
 
 '''
-
 
 import sys, math, random
 import numpy as np
@@ -232,6 +232,13 @@ def read3(train_file, test_file):
 
 
 def bipolar_encode(set):
+    '''
+        Bipolar encoding. This function converts the zero values of the
+        given set into -1.
+
+        :param set: data set to be converted.
+        :return: converted dataset.
+    '''
     for i in range(len(set)):
         example = set[i]
         for j,val in enumerate(example):
@@ -242,6 +249,18 @@ def bipolar_encode(set):
 
 
 def normalize(xtrain, xtest):
+    '''
+        Standardize features by removing the mean and scaling to unit variance.
+        The standard score of a sample x is calculated as z = (x - u)/s, where
+        i is the mean of the training samples and s is the standard deviation
+        of the training samples.
+
+        :param xtrain: training set, where means and standard deviations are
+            calculated.
+        :param xtest: test or validation set, normalized using mean and standard
+            deviations calculated with the train set.
+        :return: normalized xtrain and normalized xtest.
+    '''
     mean = np.mean(xtrain, axis=0)
     std = np.std(xtrain, axis=0)
     for i,train in enumerate(xtrain):
