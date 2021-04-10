@@ -86,6 +86,11 @@ def read_input_params():
     return read_mode, sets, alpha, n_epochs, norm, hidden, batch_size
 
 
+# Ignoring numpy Overflow warning when using sigmoid function
+np.seterr( over='ignore' )
+
+
+
 def exec_train_predict(sets, alpha, n_epochs, norm, hidden, batch_size, hyper=False, verbose=True):
     '''
         Executes main functionality of the script, i.e., trains Adaline with given parameters and given data,
