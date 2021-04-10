@@ -5,7 +5,7 @@
         · Sergio Galán Martín - sergio.galanm@estudiante.uam.es
 
     File: ex_multiperceptron.py
-    Date: Mar. 19, 2021
+    Date: Apr. 10, 2021
     Project: Assignment 2 - Neurocomputation [EPS-UAM]
 
     Description: This file contains the script for multiperceptron exercises
@@ -20,6 +20,9 @@ from tabulate import tabulate
 import numpy as np
 from scipy import stats
 
+
+# If set to True, test set is divided into validation and test set (50%-50%).
+VALIDATION = True
 
 
 DEFAULT_ALPHA = 0.1
@@ -90,8 +93,7 @@ def read_input_params():
 np.seterr( over='ignore' )
 
 
-
-def exec_train_predict(sets, alpha, n_epochs, norm, hidden, batch_size, hyper=False, verbose=True):
+def exec_train_predict(sets, alpha, n_epochs, hidden, batch_size, hyper=False, verbose=True):
     '''
         Executes main functionality of the script, i.e., trains Adaline with given parameters and given data,
         and prints it with the predictions. It also prints final overall MSE and saves a graph representing
@@ -100,7 +102,6 @@ def exec_train_predict(sets, alpha, n_epochs, norm, hidden, batch_size, hyper=Fa
         :param sets: 4-tuple containing train and tests sets read from specified datafile using given read mode.
         :param alpha: learning rate
         :param n_epochs: number of epochs to train the algorithm.
-        :param norm: boolean, whether to normalize the data or not.
         :param hidden: Tuple indicating the neurons of the hidden layers.
             The length of this tuple is the number of hidden layers.
             The i-th element represents the number of neurons in the i-th hidden layer,
@@ -113,10 +114,6 @@ def exec_train_predict(sets, alpha, n_epochs, norm, hidden, batch_size, hyper=Fa
 
     ytrain = bipolar_encode(ytrain)
     ytest = bipolar_encode(ytest)
-
-    # Normalizing data if specified by user
-    if norm:
-        xtrain, xtest = normalize(xtrain, xtest)
 
     n_inputs = len(xtrain[0])
     n_outputs = len(ytrain[0])
@@ -175,6 +172,9 @@ def exec_train_predict(sets, alpha, n_epochs, norm, hidden, batch_size, hyper=Fa
     axes[1].plot(range(len(multiperc_nn.epoch_accs)), multiperc_nn.epoch_accs)
     plt.savefig('imgs/MSE+Acc_multiperc.png')
 
+    if VALIDATION:
+        print("===> Final generalization error using test set:")
+
     print("MSE Loss:", mse_loss)
     print("Accuracy:", acc, "("+str(acc*100)+"%)")
 
@@ -187,7 +187,19 @@ N_NEUR_LAYER = [2, 20]
 N_HYPER = 7
 N_REPS = 5
 
-def val_hyperparams(sets, n_epochs, norm, batch_size):
+def val_hyperparams(sets, n_epochs, batch_size):
+    '''
+        Executes random hyperparameter search.
+
+        :param sets: tuple containing train and test set. The test set might be
+            considered a validation set instead.
+        :param n_epochs: number of epochs for training.
+        :param batch_size: batch size for training set.
+        :return: tuple containing best hyperparameters, i.e.,
+            the hyperparamters that the models performs better (best accuracy).
+    '''
+
+    best_acc = 0.0
 
     for i in range(N_HYPER):
         alpha = stats.loguniform.rvs(ALPHA_RANGE[0], ALPHA_RANGE[1])
@@ -203,21 +215,66 @@ def val_hyperparams(sets, n_epochs, norm, batch_size):
         MSE_LOSS = []
         ACC = []
         for k in range(N_REPS):
-            mse_loss, acc = exec_train_predict(sets, alpha, n_epochs, norm, hidden_list, batch_size, hyper=True, verbose=False)
+            mse_loss, acc = exec_train_predict(sets, alpha, n_epochs, hidden_list, batch_size, hyper=True, verbose=False)
             MSE_LOSS.append(mse_loss)
             ACC.append(acc)
 
         MSE_LOSS = np.asarray(MSE_LOSS)
         ACC = np.asarray(ACC)
+        if ACC.mean() > best_acc:
+            best_hyper = (alpha, hidden_list)
+
         print("=> Mean MSE Loss:", MSE_LOSS.mean(), "+-", MSE_LOSS.std())
         print("=> Mean Accuracy:", ACC.mean(), "+-", ACC.std())
         print("===========================================")
 
+    if VALIDATION:
+        print(">>> Best hyperparameters (obtained using train and validation sets) <<<")
+        print("Alpha:", best_hyper[0])
+        print("Hidden layers:", best_hyper[1])
+        print(">>======================================================<<")
+
+
+    return best_hyper
+
+
+
+
+def _divide_test_set(xtest, ytest):
+    '''
+        Divides test set into validation set and test set. It takes the 50% of
+        the examples and place them into the validation set, and the other
+        50% is placed into a new test set.
+
+        :param xtest: input test examples.
+        :param ytest: output test examples.
+        :return: tuple containing:
+            input validation examples, output validation examples,
+            input test examples, output test examples.
+    '''
+    half = len(xtest)//2
+    return xtest[:half], ytest[:half], xtest[half:], ytest[half:]
 
 
 if __name__ == '__main__':
     read_mode, sets, alpha, n_epochs, norm, hidden, batch_size = read_input_params()
-    if '-hyper' in sys.argv:
-        val_hyperparams(sets, n_epochs, norm, batch_size)
+
+    xtrain, ytrain, xtest, ytest = sets
+    # Normalizing data if specified by user
+    if norm:
+        xtrain, xtest = normalize(xtrain, xtest)
+
+    if VALIDATION:
+        xval, yval, xtest, ytest = _divide_test_set(xtest, ytest)
+        sets_val = (xtrain, ytrain, xval, yval)
+        sets_train_pred = (xtrain, ytrain, xtest, ytest)
     else:
-        exec_train_predict(sets, alpha, n_epochs, norm, hidden, batch_size)
+        sets_val = sets
+        sets_train_pred = sets
+
+    if '-hyper' in sys.argv:
+        alpha, hidden = val_hyperparams(sets_val, n_epochs, batch_size)
+        if VALIDATION:
+            exec_train_predict(sets_train_pred, alpha, n_epochs, hidden, batch_size)
+    else:
+        exec_train_predict(sets_train_pred, alpha, n_epochs, hidden, batch_size)

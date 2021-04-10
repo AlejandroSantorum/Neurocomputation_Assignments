@@ -5,7 +5,7 @@
         · Sergio Galán Martín - sergio.galanm@estudiante.uam.es
 
     File: Multiperceptron.py
-    Date: Mar. 10, 2021
+    Date: Apr. 10, 2021
     Project: Assignment 2 - Neurocomputation [EPS-UAM]
 
     Description: This file contains the implementation of class Multiperceptron, whose
@@ -24,15 +24,39 @@ import time
 
 
 def bipolar_sigmoid(x):
+    '''
+        Bipolar sigmoid activation function.
+
+        :param x: real number to evaluate the function.
+        :return: real number, the function at x.
+    '''
     return 2/(1+np.exp(-x)) - 1
 
 def bipolar_sigmoid_derivative(x):
+    '''
+        Derivative of bipolar sigmoid activation function.
+
+        :param x: real number to evaluate the derivative.
+        :return: real number, the derivative at x.
+    '''
     return 0.5 * (1 + bipolar_sigmoid(x)) * (1 - bipolar_sigmoid(x))
 
 def sigmoid(z):
+    '''
+        Binary sigmoid activation function.
+
+        :param z: real number to evaluate the function.
+        :return: real number, the function at z.
+    '''
     return 1/(1 + np.exp(-z))
 
 def sigmoid_derivative(z):
+    '''
+        Derivative of binary sigmoid activation function.
+
+        :param x: real number to evaluate the derivative.
+        :return: real number, the derivative at z.
+    '''
     return sigmoid(z)*(1 - sigmoid(z))
 
 
@@ -117,6 +141,12 @@ class Multiperceptron(NNClassifier):
 
 
     def _forward_propagation(self, id):
+        '''
+            Perfroms the forward propagation part of MLP weight update.
+
+            :param id: Debugging id
+            :return: None
+        '''
         self.former_values = []
         self.former_activations = []
         # input layer trigger
@@ -144,6 +174,13 @@ class Multiperceptron(NNClassifier):
 
 
     def _backward_propagation(self, ytrain_array, id):
+        '''
+            Perfroms the backward propagation part of MLP weight update.
+
+            :param ytrain_array: Targets of the training set
+            :param id: Debugging id
+            :return: None
+        '''
         self.Deltas = []
         # getting last array of predictions (each output neuron activation)
         predictions = self.former_activations[-1]
@@ -189,6 +226,11 @@ class Multiperceptron(NNClassifier):
 
 
     def _update_nn_weights(self):
+        '''
+            Perfroms the weight modification part of MLP weight update.
+
+            :return: None
+        '''
 
         current_layer = self.nn.layers[-2]
         next_layer = self.nn.layers[-1]
