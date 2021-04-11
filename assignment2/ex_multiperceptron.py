@@ -22,7 +22,7 @@ from scipy import stats
 
 
 # If set to True, test set is divided into validation and test set (50%-50%).
-VALIDATION = True
+VALIDATION = False
 
 
 DEFAULT_ALPHA = 0.1
